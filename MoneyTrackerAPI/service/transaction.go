@@ -1,0 +1,27 @@
+package service
+
+type Transaction struct {
+	ID       int     `json:"ID"`
+	Category string  `json:"Category"`
+	Amount   float32 `json:"Amount"`
+	Date     string  `json:"Date"`
+	Note     string  `json:"Note"`
+	Username string  `json:"Username"`
+}
+
+type TransactionPost struct {
+	Category string  `json:"Category"`
+	Amount   float32 `json:"Amount"`
+	Date     string  `json:"Date"`
+	Note     string  `json:"Note"`
+	Username string  `json:"Username"`
+}
+
+type TransactionService interface {
+	GetAll(username string) ([]Transaction, error)
+	GetByID(username string, id int) (*Transaction, error)
+	GetByDate(username string, date string) ([]Transaction, error)
+	Create(TransactionPost) (*Transaction, error)
+	Update(username string, id int, category string, amount float32, date string, note string) (*Transaction, error)
+	Delete(username string, id int) (*Transaction, error)
+}
