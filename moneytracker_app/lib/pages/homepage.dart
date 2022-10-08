@@ -11,8 +11,6 @@ import 'package:http/http.dart' as http;
 
 import '../models/transaction.dart';
 
-List<Transaction> transactionList = [];
-
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
 
@@ -30,16 +28,20 @@ class _HomepageState extends State<Homepage> {
         await http.get(Uri.http("127.0.0.1:8000", "/transaction/MeisterAP"));
     var jsonData = jsonDecode(response.body);
     for (dynamic t in jsonData) {
-      Transaction transaction = Transaction(
-          id: t['ID'],
-          category: t['Category'],
-          amount: t['Amount'],
-          date: t['Date'],
-          note: t['Note'],
-          username: t['Username']);
-      transactionList.add(transaction);
+      List<Transaction> tList = [];
+      for (dynamic u in t['Transactions']) {
+        tList.add(Transaction(
+            id: u['ID'],
+            category: u['Category'],
+            amount: u['Amount'],
+            date: u['Date'],
+            note: u['Note'],
+            username: u['Username']));
+      }
+      dt.add(DatedTransaction(date: t['Date'], transactions: tList));
+
     }
-    dt = ListedDateTransaction.fromTransactions(transactionList).self();
+
   }
 
   void getBalance() async {
@@ -78,11 +80,14 @@ class _HomepageState extends State<Homepage> {
             ),
             Card(
               child: Padding(
-                padding: const EdgeInsets.only(left: 24, right: 24, top: 4, bottom: 4),
+                padding: const EdgeInsets.only(
+                    left: 24, right: 24, top: 4, bottom: 4),
                 child: Text(
                   "฿ $balance",
                   style: GoogleFonts.kanit(
-                      fontSize: 24, fontWeight: FontWeight.bold, ),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             )
@@ -96,7 +101,7 @@ class _HomepageState extends State<Homepage> {
             itemBuilder: (BuildContext buildContext, int i) {
               return Column(
                 children: [
-                  DateCard(date: dt[i].date),
+                  DateCard(date: dt[i].date, sum: dt[i].sum),
                   for (int j = 0; j < dt[i].transactions.length; ++j)
                     TransactionCard(
                         icon: Icon(Icons.fastfood),

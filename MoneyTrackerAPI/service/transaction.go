@@ -17,8 +17,14 @@ type TransactionPost struct {
 	Username string  `json:"Username"`
 }
 
+type DatedTransactions struct {
+	Date         string        `json:"Date"`
+	Transactions []Transaction `json:"Transactions"`
+}
+
 type TransactionService interface {
 	GetAll(username string) ([]Transaction, error)
+	GetAllDated(username string) ([]DatedTransactions, error)
 	GetByID(username string, id int) (*Transaction, error)
 	GetByDate(username string, date string) ([]Transaction, error)
 	Create(TransactionPost) (*Transaction, error)

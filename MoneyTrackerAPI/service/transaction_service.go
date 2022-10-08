@@ -38,6 +38,31 @@ func (s transactionService) GetAll(username string) ([]Transaction, error) {
 
 }
 
+func (s transactionService) GetAllDated(username string) ([]DatedTransactions, error) {
+	transactions, err := s.GetAll(username)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
+	}
+
+	cDate := ""
+	var list []DatedTransactions
+	for i := 0; i < len(transactions); i++ {
+		if transactions[i].Date == cDate {
+			list[len(list)-1].Transactions = append(list[len(list)-1].Transactions, transactions[i])
+
+		} else {
+			cDate = transactions[i].Date
+			dt := DatedTransactions{Date: cDate, Transactions: []Transaction{}}
+			list = append(list, dt)
+			list[len(list)-1].Transactions = append(list[len(list)-1].Transactions, transactions[i])
+		}
+	}
+
+	return list, nil
+
+}
+
 func (s transactionService) GetByID(username string, id int) (*Transaction, error) {
 	transaction, err := s.transactionRepo.GetByID(username, id)
 	if transaction == nil {

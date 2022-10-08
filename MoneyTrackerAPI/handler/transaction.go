@@ -19,7 +19,7 @@ func NewTransactionHandler(transactionSrv service.TransactionService) transactio
 
 func (h transactionHandler) GetAll(c *fiber.Ctx) error {
 	username := c.Params("username")
-	transactions, err := h.transactionSrv.GetAll(username)
+	transactions, err := h.transactionSrv.GetAllDated(username)
 	if err != nil {
 		logs.Error(err)
 		return err
