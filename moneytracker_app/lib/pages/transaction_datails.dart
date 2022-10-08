@@ -28,7 +28,7 @@ class TransactionDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomAppBarContent(balance: 0),
+        title: CustomAppBarContent(balance: -1),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:moneytracker_app/models/dated_transaction.dart';
 import 'package:moneytracker_app/models/listed_date_transaction.dart';
+import 'package:moneytracker_app/pages/add_transaction.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/date_card.dart';
 import 'package:moneytracker_app/widgets/transaction_card.dart';
@@ -61,10 +62,14 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     // getTransaction();
     return Scaffold(
-        appBar: AppBar(
-            title: CustomAppBarContent(balance: balance)),
+        appBar: AppBar(title: CustomAppBarContent(balance: balance)),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddTransaction()),
+            );
+          },
           child: const Icon(Icons.add),
         ),
         body: ListView.builder(
