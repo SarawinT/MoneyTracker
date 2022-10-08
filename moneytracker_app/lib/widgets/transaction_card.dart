@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneytracker_app/models/transaction.dart';
+import 'package:moneytracker_app/pages/transaction_datails.dart';
 
 class TransactionCard extends Card {
   final Icon icon;
@@ -16,15 +17,24 @@ class TransactionCard extends Card {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => TransactionDetails(
+                        transaction: transaction,
+                        icon: Icons.fastfood,
+                      )),
+            );
+          },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                const SizedBox(width: 24)
-                ,icon,
+                const SizedBox(width: 24),
+                icon,
                 const SizedBox(width: 16),
                 Expanded(
                     child: Column(

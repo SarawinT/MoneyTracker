@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:moneytracker_app/models/dated_transaction.dart';
 import 'package:moneytracker_app/models/listed_date_transaction.dart';
+import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/date_card.dart';
 import 'package:moneytracker_app/widgets/transaction_card.dart';
 import 'package:http/http.dart' as http;
@@ -39,9 +40,7 @@ class _HomepageState extends State<Homepage> {
             username: u['Username']));
       }
       dt.add(DatedTransaction(date: t['Date'], transactions: tList));
-
     }
-
   }
 
   void getBalance() async {
@@ -63,36 +62,7 @@ class _HomepageState extends State<Homepage> {
     // getTransaction();
     return Scaffold(
         appBar: AppBar(
-            title: Row(
-          children: [
-            const Icon(
-              Icons.wallet,
-              size: 36,
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              child: Text(
-                "Money Tracker",
-                style: GoogleFonts.kanit(fontSize: 24),
-              ),
-            ),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 24, right: 24, top: 4, bottom: 4),
-                child: Text(
-                  "฿ $balance",
-                  style: GoogleFonts.kanit(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            )
-          ],
-        )),
+            title: CustomAppBarContent(balance: balance)),
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: const Icon(Icons.add),
@@ -105,7 +75,10 @@ class _HomepageState extends State<Homepage> {
                   for (int j = 0; j < dt[i].transactions.length; ++j)
                     TransactionCard(
                         icon: Icon(Icons.fastfood),
-                        transaction: dt[i].transactions[j])
+                        transaction: dt[i].transactions[j]),
+                  const SizedBox(
+                    height: 4,
+                  )
                 ],
               );
             },

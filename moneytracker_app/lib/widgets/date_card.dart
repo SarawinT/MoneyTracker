@@ -3,10 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class DateCard extends Card {
-  String date;
-  double sum;
+  final String date;
+  final double sum;
 
-  DateCard({required this.date, required this.sum});
+  const DateCard({Key? key, required this.date, required this.sum}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
