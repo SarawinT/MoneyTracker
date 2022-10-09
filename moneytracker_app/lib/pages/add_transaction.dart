@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:moneytracker_app/widgets/category_selector.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
+import 'package:http/http.dart' as http;
 
 class AddTransaction extends StatefulWidget {
   AddTransaction({Key? key}) : super(key: key);
@@ -12,10 +16,15 @@ class AddTransaction extends StatefulWidget {
 }
 
 class _AddTransactionState extends State<AddTransaction> {
-  TextEditingController _amountController = TextEditingController();
-  TextEditingController _noteController = TextEditingController();
-  DateTime selectedDate = DateTime.now();
-  String formattedDate = "";
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
+  String _formattedDate = "";
+  String _selectedCategory = "Select category";
+  bool _isExpense = true;
+  IconData _icon = Icons.question_mark;
+
+  String _feedback = "";
 
   @override
   void initState() {
@@ -25,12 +34,12 @@ class _AddTransactionState extends State<AddTransaction> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: _selectedDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime.now());
-    if (picked != null && picked != selectedDate) {
+    if (picked != null && picked != _selectedDate) {
       setState(() {
-        selectedDate = picked;
+        _selectedDate = picked;
         _formatDate();
       });
     }
@@ -38,16 +47,50 @@ class _AddTransactionState extends State<AddTransaction> {
 
   void _formatDate() {
     DateTime now = DateTime.now();
-    if (selectedDate.day == now.day &&
-        selectedDate.month == now.month &&
-        selectedDate.year == now.year) {
-      formattedDate = "Today";
-    } else if (selectedDate.day == now.day - 1 &&
-        selectedDate.month == now.month &&
-        selectedDate.year == now.year) {
-      formattedDate = "Yesterday";
+    if (_selectedDate.day == now.day &&
+        _selectedDate.month == now.month &&
+        _selectedDate.year == now.year) {
+      _formattedDate = "Today";
+    } else if (_selectedDate.day == now.day - 1 &&
+        _selectedDate.month == now.month &&
+        _selectedDate.year == now.year) {
+      _formattedDate = "Yesterday";
     } else {
-      formattedDate = DateFormat("EEEE, dd/M/yyyy").format(selectedDate);
+      _formattedDate = DateFormat("EEEE, dd/M/yyyy").format(_selectedDate);
+    }
+  }
+
+  Future<bool> createTransaction() async {
+    double amount;
+    if (_isExpense) {
+      amount = double.parse(_amountController.text) * -1;
+    } else {
+      amount = double.parse(_amountController.text);
+    }
+    String date = DateFormat("yyyy-M-dd").format(_selectedDate);
+
+    String requestJson = jsonEncode(<String, dynamic>{
+      'Category': _selectedCategory,
+      'Amount': amount,
+      'Date': date,
+      'Note': _noteController.text
+    });
+
+    print(requestJson);
+
+    var response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/transaction/MeisterAP'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: requestJson,
+    );
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -59,9 +102,26 @@ class _AddTransactionState extends State<AddTransaction> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(_amountController.text);
-          print(selectedDate);
-          print(_noteController.text);
+          setState(() {
+            if (_selectedCategory == "Select category") {
+              _feedback = "Please select category";
+              return;
+            } else if (_amountController.text.isEmpty) {
+              _feedback = "Please enter amount";
+              return;
+            } else {
+              _feedback = "";
+              bool success = false;
+              var reponse = createTransaction().then((value) {
+                success = value;
+              });
+              if (success) {
+                Navigator.pop(context, reponse);
+              } else {
+                print("asjdl");
+              }
+            }
+          });
         },
         child: const Icon(Icons.save),
       ),
@@ -77,7 +137,55 @@ class _AddTransactionState extends State<AddTransaction> {
             ),
             const Divider(),
             const SizedBox(
-              height: 16,
+              height: 24,
+            ),
+            Row(
+              children: [
+                Icon(
+                  _icon,
+                  size: 32,
+                ),
+                const SizedBox(
+                  width: 40,
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () async {
+                      var cData = await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CategorySelector();
+                          });
+                      setState(() {
+                        _selectedCategory = cData.name;
+                        _isExpense = cData.isExpense;
+                        _icon = cData.icon;
+                      });
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(width: 2.0, color: Colors.green),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16, bottom: 8),
+                            child: Text(
+                              _selectedCategory,
+                              style: GoogleFonts.kanit(fontSize: 16),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 24,
             ),
             Row(
               children: [
@@ -98,6 +206,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 16),
                       child: TextField(
+                        style: GoogleFonts.kanit(fontSize: 16),
                         decoration: InputDecoration(
                           hintText: 'Enter amount',
                           hintStyle: GoogleFonts.kanit(fontSize: 16),
@@ -144,7 +253,7 @@ class _AddTransactionState extends State<AddTransaction> {
                           Padding(
                             padding: const EdgeInsets.only(left: 16, bottom: 8),
                             child: Text(
-                              formattedDate,
+                              _formattedDate,
                               style: GoogleFonts.kanit(fontSize: 16),
                             ),
                           ),
@@ -177,6 +286,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 16),
                       child: TextField(
+                        style: GoogleFonts.kanit(fontSize: 16),
                         decoration: InputDecoration(
                           hintText: 'Enter note',
                           hintStyle: GoogleFonts.kanit(fontSize: 16),
@@ -189,6 +299,15 @@ class _AddTransactionState extends State<AddTransaction> {
                 )
               ],
             ),
+            const SizedBox(
+              height: 24,
+            ),
+            Center(
+              child: Text(
+                _feedback,
+                style: GoogleFonts.kanit(color: Colors.red, fontSize: 18),
+              ),
+            )
           ],
         ),
       ),

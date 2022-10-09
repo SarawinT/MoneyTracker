@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
+import 'package:moneytracker_app/models/category.dart';
 import 'package:moneytracker_app/models/dated_transaction.dart';
 import 'package:moneytracker_app/models/listed_date_transaction.dart';
 import 'package:moneytracker_app/pages/add_transaction.dart';
@@ -64,8 +65,8 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
         appBar: AppBar(title: CustomAppBarContent(balance: balance)),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
+          onPressed: () async {
+            var createReponse = await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => AddTransaction()),
             );
@@ -79,7 +80,8 @@ class _HomepageState extends State<Homepage> {
                   DateCard(date: dt[i].date, sum: dt[i].sum),
                   for (int j = 0; j < dt[i].transactions.length; ++j)
                     TransactionCard(
-                        icon: Icon(Icons.fastfood),
+                        icon: CategoryList.getIconExpense(
+                            dt[i].transactions[j].category),
                         transaction: dt[i].transactions[j]),
                   const SizedBox(
                     height: 4,

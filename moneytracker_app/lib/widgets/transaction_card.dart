@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moneytracker_app/models/transaction.dart';
 import 'package:moneytracker_app/pages/transaction_datails.dart';
 
-class TransactionCard extends Card {
-  final Icon icon;
+class TransactionCard extends StatelessWidget {
+  final IconData icon;
   final Transaction transaction;
 
   const TransactionCard(
@@ -24,7 +24,7 @@ class TransactionCard extends Card {
             MaterialPageRoute(
                 builder: (context) => TransactionDetails(
                       transaction: transaction,
-                      icon: Icons.fastfood,
+                      icon: icon,
                     )),
           );
         },
@@ -33,7 +33,7 @@ class TransactionCard extends Card {
           child: Row(
             children: [
               const SizedBox(width: 24),
-              icon,
+              Icon(icon),
               const SizedBox(width: 16),
               Expanded(
                   child: Column(
