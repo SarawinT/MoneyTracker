@@ -8,14 +8,14 @@ import 'package:moneytracker_app/widgets/category_selector.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:http/http.dart' as http;
 
-class AddTransaction extends StatefulWidget {
-  const AddTransaction({Key? key}) : super(key: key);
+class CreateTransaction extends StatefulWidget {
+  const CreateTransaction({Key? key}) : super(key: key);
 
   @override
-  State<AddTransaction> createState() => _AddTransactionState();
+  State<CreateTransaction> createState() => _CreateTransactionState();
 }
 
-class _AddTransactionState extends State<AddTransaction> {
+class _CreateTransactionState extends State<CreateTransaction> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -29,6 +29,7 @@ class _AddTransactionState extends State<AddTransaction> {
   @override
   void initState() {
     _formatDate();
+    super.initState();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -157,6 +158,9 @@ class _AddTransactionState extends State<AddTransaction> {
                           builder: (BuildContext context) {
                             return const CategorySelector();
                           });
+                      if (cData == null) {
+                        return;
+                      }
                       setState(() {
                         _selectedCategory = cData.name;
                         _isExpense = cData.isExpense;

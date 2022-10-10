@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:moneytracker_app/models/category.dart';
 import 'package:moneytracker_app/models/dated_transaction.dart';
-import 'package:moneytracker_app/pages/add_transaction.dart';
+import 'package:moneytracker_app/pages/create_transaction.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/date_card.dart';
 import 'package:moneytracker_app/widgets/transaction_card.dart';
@@ -70,11 +68,15 @@ class _HomepageState extends State<Homepage> {
         appBar: AppBar(title: CustomAppBarContent(balance: balance)),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            var createReponse = await Navigator.push(
+            var createResponse = await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AddTransaction()),
+              MaterialPageRoute(
+                  builder: (context) => const CreateTransaction()),
             );
-            if (createReponse) {
+            if (createResponse == null) {
+              return;
+            }
+            if (createResponse) {
               datedTransactions = await getTransaction();
               balance = await getBalance();
               setState(() {});

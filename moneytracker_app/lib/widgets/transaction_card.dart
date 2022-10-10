@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneytracker_app/models/transaction.dart';
-import 'package:moneytracker_app/pages/transaction_datails.dart';
+import 'package:moneytracker_app/pages/transaction_details.dart';
 
 class TransactionCard extends StatelessWidget {
   final IconData icon;
@@ -15,11 +15,12 @@ class TransactionCard extends StatelessWidget {
     return transaction.id;
   }
 
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () async {
-          var data = await Navigator.push(
+          var response = await Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => TransactionDetails(
@@ -27,7 +28,12 @@ class TransactionCard extends StatelessWidget {
                       icon: icon,
                     )),
           );
-          print(data);
+
+          if (response == null) {
+            return;
+          }
+
+          print(response);
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
