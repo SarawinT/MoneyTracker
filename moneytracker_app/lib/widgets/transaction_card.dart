@@ -18,8 +18,8 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          var data = await Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => TransactionDetails(
@@ -27,6 +27,7 @@ class TransactionCard extends StatelessWidget {
                       icon: icon,
                     )),
           );
+          print(data);
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

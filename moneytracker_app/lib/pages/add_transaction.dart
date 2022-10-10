@@ -9,7 +9,7 @@ import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:http/http.dart' as http;
 
 class AddTransaction extends StatefulWidget {
-  AddTransaction({Key? key}) : super(key: key);
+  const AddTransaction({Key? key}) : super(key: key);
 
   @override
   State<AddTransaction> createState() => _AddTransactionState();
@@ -76,8 +76,6 @@ class _AddTransactionState extends State<AddTransaction> {
       'Note': _noteController.text
     });
 
-    print(requestJson);
-
     var response = await http.post(
       Uri.parse('http://127.0.0.1:8000/transaction/MeisterAP'),
       headers: <String, String>{
@@ -86,7 +84,6 @@ class _AddTransactionState extends State<AddTransaction> {
       body: requestJson,
     );
 
-    print(response.statusCode);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -101,27 +98,31 @@ class _AddTransactionState extends State<AddTransaction> {
         title: CustomAppBarContent(balance: -1),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
+          bool inputCheck = false;
           setState(() {
             if (_selectedCategory == "Select category") {
               _feedback = "Please select category";
-              return;
             } else if (_amountController.text.isEmpty) {
               _feedback = "Please enter amount";
-              return;
             } else {
               _feedback = "";
-              bool success = false;
-              var reponse = createTransaction().then((value) {
-                success = value;
-              });
-              if (success) {
-                Navigator.pop(context, reponse);
-              } else {
-                print("asjdl");
-              }
+              inputCheck = true;
             }
           });
+          if (inputCheck) {
+            bool success = false;
+            await createTransaction().then((value) {
+              success = value;
+            });
+            if (success) {
+              Navigator.pop(context, success);
+            } else {
+              setState(() {
+                _feedback = "Not enough money";
+              });
+            }
+          }
         },
         child: const Icon(Icons.save),
       ),
@@ -154,7 +155,7 @@ class _AddTransactionState extends State<AddTransaction> {
                       var cData = await showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return CategorySelector();
+                            return const CategorySelector();
                           });
                       setState(() {
                         _selectedCategory = cData.name;
@@ -172,10 +173,18 @@ class _AddTransactionState extends State<AddTransaction> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(left: 16, bottom: 8),
-                            child: Text(
-                              _selectedCategory,
-                              style: GoogleFonts.kanit(fontSize: 16),
-                            ),
+                            child: _selectedCategory == "Select category"
+                                ? Text(
+                                    _selectedCategory,
+                                    style: GoogleFonts.kanit(
+                                        fontSize: 16,
+                                        color: const Color.fromARGB(
+                                            255, 125, 125, 125)),
+                                  )
+                                : Text(
+                                    _selectedCategory,
+                                    style: GoogleFonts.kanit(fontSize: 16),
+                                  ),
                           ),
                         ],
                       ),
