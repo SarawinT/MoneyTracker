@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytracker_app/models/transaction.dart';
+import 'package:moneytracker_app/pages/edit_transaction.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:http/http.dart' as http;
+import 'package:moneytracker_app/widgets/transaction_card.dart';
 
 class TransactionDetails extends StatefulWidget {
   final Transaction transaction;
@@ -11,6 +15,10 @@ class TransactionDetails extends StatefulWidget {
   late String _formattedDate = "";
   TransactionDetails({Key? key, required this.transaction, required this.icon})
       : super(key: key) {
+    _formatDate();
+  }
+
+  void _formatDate() {
     DateTime dt = DateTime.parse(transaction.date);
     DateTime now = DateTime.now();
 
@@ -30,17 +38,41 @@ class TransactionDetails extends StatefulWidget {
 }
 
 class _TransactionDetailsState extends State<TransactionDetails> {
-  Future<bool> deleteTransaction() async {
+  Future<Object> _deleteTransaction() async {
     var response = await http.delete(
       Uri.parse(
           'http://127.0.0.1:8000/transaction/MeisterAP/${widget.transaction.id}'),
     );
 
     if (response.statusCode == 200) {
-      return true;
+      return EditDeleteStatus.deleteSuccess;
     } else {
-      return false;
+      return EditDeleteStatus.deleteFail;
     }
+  }
+
+  void _updateTransaction() async {
+    var response = await http.get(Uri.http("127.0.0.1:8000",
+        "/transaction/MeisterAP/id/${widget.transaction.id}"));
+    var jsonData = jsonDecode(response.body);
+    widget.transaction.category = jsonData['Category'];
+    widget.transaction.amount = jsonData['Amount'];
+    widget.transaction.date = jsonData['Date'];
+    widget.transaction.note = jsonData['Note'];
+    widget._formatDate();
+
+    setState(() {});
+  }
+
+  void showSnackBar(String text) {
+    SnackBar snackBar = SnackBar(
+      content: Text(
+        text,
+        style: GoogleFonts.kanit(),
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -62,20 +94,27 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 ),
               ),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    var editResponse = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              EditTransaction(transaction: widget.transaction)),
+                    );
+
+                    if (editResponse == EditDeleteStatus.editSuccess) {
+                      _updateTransaction();
+                      showSnackBar('Transaction edited');
+                    }
+                  },
                   icon: const Icon(Icons.edit),
                   splashRadius: 18),
               IconButton(
                   onPressed: () async {
-                    bool success = false;
-                    var response = await deleteTransaction().then((value) {
-                      success = value;
-                    });
-                    if (success) {
-                      Navigator.pop(context, success);
-                      setState(() {});
-                    } else {
-                      print("not success");
+                    Object status = EditDeleteStatus.empty;
+                    status = await _deleteTransaction();
+                    if (status == EditDeleteStatus.deleteSuccess) {
+                      Navigator.pop(context, status);
                     }
                   },
                   icon: const Icon(Icons.delete),
@@ -123,6 +162,24 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           const SizedBox(
             height: 16,
           ),
+          Row(
+            children: [
+              const Icon(
+                Icons.calendar_month,
+                size: 32,
+              ),
+              const SizedBox(
+                width: 24,
+              ),
+              Text(
+                widget._formattedDate,
+                style: GoogleFonts.kanit(fontSize: 16),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 16,
+          ),
           if (widget.transaction.note.isNotEmpty)
             Row(
               children: [
@@ -139,24 +196,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 ),
               ],
             ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              const Icon(
-                Icons.calendar_month,
-                size: 32,
-              ),
-              const SizedBox(
-                width: 24,
-              ),
-              Text(
-                widget._formattedDate,
-                style: GoogleFonts.kanit(fontSize: 16),
-              ),
-            ],
-          )
         ]),
       ),
     );

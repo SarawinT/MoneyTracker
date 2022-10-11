@@ -3,18 +3,26 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moneytracker_app/models/transaction.dart';
 import 'package:moneytracker_app/pages/transaction_details.dart';
 
+enum EditDeleteStatus {
+  empty,
+  deleteSuccess,
+  deleteFail,
+  editSuccess,
+  editFail
+}
+
 class TransactionCard extends StatelessWidget {
   final IconData icon;
   final Transaction transaction;
+  final dynamic homepage;
 
   const TransactionCard(
-      {Key? key, required this.icon, required this.transaction})
+      {Key? key, required this.icon, required this.transaction, this.homepage})
       : super(key: key);
 
   int getID() {
     return transaction.id;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +37,19 @@ class TransactionCard extends StatelessWidget {
                     )),
           );
 
-          if (response == null) {
+          if (response == EditDeleteStatus.empty) {
+            return;
+          }
+          if (response == EditDeleteStatus.deleteSuccess) {
+            homepage.updateData();
+            homepage.showSnackBar('Transaction deleted');
             return;
           }
 
-          print(response);
+          if (response == null) {
+            homepage.updateData();
+            return;
+          }
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -64,8 +80,7 @@ class TransactionCard extends StatelessWidget {
                     )
                   : Text(
                       "${transaction.amount}",
-                      style:
-                          GoogleFonts.kanit(fontSize: 24, color: Colors.red),
+                      style: GoogleFonts.kanit(fontSize: 24, color: Colors.red),
                     )
             ],
           ),
