@@ -16,10 +16,10 @@ class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<Homepage> createState() => HomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class HomepageState extends State<Homepage> {
   double balance = -1;
   late List<dynamic> datedTransactions = [];
 
@@ -98,8 +98,24 @@ class _HomepageState extends State<Homepage> {
         child: const Icon(Icons.add),
       ),
       body: datedTransactions.isEmpty
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.add_box_outlined,
+                    size: 96,
+                    color: Color.fromARGB(255, 125, 125, 125),
+                  ),
+                  const SizedBox(height: 16,),
+                  Text(
+                    "No transactions",
+                    style: GoogleFonts.kanit(
+                        fontSize: 24,
+                        color: const Color.fromARGB(255, 125, 125, 125)),
+                  )
+                ],
+              ),
             )
           : ListView.builder(
               itemBuilder: (BuildContext buildContext, int i) {
@@ -112,14 +128,13 @@ class _HomepageState extends State<Homepage> {
                         j < datedTransactions[i].transactions.length;
                         ++j)
                       TransactionCard(
-                          icon: datedTransactions[i].transactions[j].amount > 0
-                              ? CategoryList.getIconIncome(
-                                  datedTransactions[i].transactions[j].category)
-                              : CategoryList.getIconExpense(datedTransactions[i]
-                                  .transactions[j]
-                                  .category),
-                          transaction: datedTransactions[i].transactions[j],
-                          homepage: this),
+                        icon: datedTransactions[i].transactions[j].amount > 0
+                            ? CategoryList.getIconIncome(
+                                datedTransactions[i].transactions[j].category)
+                            : CategoryList.getIconExpense(
+                                datedTransactions[i].transactions[j].category),
+                        transaction: datedTransactions[i].transactions[j],
+                      ),
                     const SizedBox(
                       height: 4,
                     )

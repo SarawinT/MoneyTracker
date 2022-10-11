@@ -12,7 +12,7 @@ import 'package:moneytracker_app/widgets/transaction_card.dart';
 class TransactionDetails extends StatefulWidget {
   final Transaction transaction;
   final IconData icon;
-  late String _formattedDate = "";
+  String _formattedDate = "";
   TransactionDetails({Key? key, required this.transaction, required this.icon})
       : super(key: key) {
     _formatDate();
@@ -82,7 +82,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         title: CustomAppBarContent(balance: -1),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 16, bottom: 16, left: 24, right: 24),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             children: [
@@ -126,13 +126,14 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             height: 16,
           ),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(
                 width: 8,
               ),
               Icon(
                 widget.icon,
-                size: 48,
+                size: 52,
               ),
               const SizedBox(
                 width: 24,
@@ -182,6 +183,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           ),
           if (widget.transaction.note.isNotEmpty)
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Icon(
                   Icons.list,
@@ -190,9 +192,12 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 const SizedBox(
                   width: 24,
                 ),
-                Text(
-                  widget.transaction.note,
-                  style: GoogleFonts.kanit(fontSize: 16),
+                Flexible(
+                  child: Text(
+                    widget.transaction.note,
+                    style: GoogleFonts.kanit(fontSize: 16),
+                    softWrap: true,
+                  ),
                 ),
               ],
             ),

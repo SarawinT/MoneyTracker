@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moneytracker_app/models/transaction.dart';
 import 'package:moneytracker_app/pages/transaction_details.dart';
 
+import '../pages/homepage.dart';
+
 enum EditDeleteStatus {
   empty,
   deleteSuccess,
@@ -14,10 +16,10 @@ enum EditDeleteStatus {
 class TransactionCard extends StatelessWidget {
   final IconData icon;
   final Transaction transaction;
-  final dynamic homepage;
+
 
   const TransactionCard(
-      {Key? key, required this.icon, required this.transaction, this.homepage})
+      {Key? key, required this.icon, required this.transaction})
       : super(key: key);
 
   int getID() {
@@ -26,6 +28,8 @@ class TransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HomepageState homepage = context.findAncestorStateOfType<HomepageState>()!;
+
     return InkWell(
         onTap: () async {
           var response = await Navigator.push(

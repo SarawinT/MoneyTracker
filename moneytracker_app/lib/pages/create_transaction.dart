@@ -23,8 +23,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
   String _selectedCategory = "Select category";
   bool _isExpense = true;
   IconData _icon = Icons.question_mark;
-
-  String _feedback = "";
+String _feedback = "";
 
   @override
   void initState() {
@@ -61,7 +60,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
     }
   }
 
-  Future<bool> createTransaction() async {
+  Future<bool> _createTransaction() async {
     double amount;
     if (_isExpense) {
       amount = double.parse(_amountController.text) * -1;
@@ -96,7 +95,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomAppBarContent(balance: -1),
+        title: const CustomAppBarContent(balance: -1),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -113,7 +112,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
           });
           if (inputCheck) {
             bool success = false;
-            await createTransaction().then((value) {
+            await _createTransaction().then((value) {
               success = value;
             });
             if (success) {

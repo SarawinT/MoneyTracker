@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moneytracker_app/pages/homepage.dart';
 
 class CustomAppBarContent extends StatelessWidget {
   final double balance;
 
-  CustomAppBarContent({Key? key, required this.balance}) : super(key: key);
+  const CustomAppBarContent({Key? key, required this.balance})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    HomepageState? homepage = context.findAncestorStateOfType<HomepageState>();
+
     return Row(
       children: [
-        const Icon(
-          Icons.wallet,
-          size: 36,
-        ),
+        homepage == null
+            ? const Icon(
+                Icons.wallet,
+                size: 36,
+              )
+            : InkWell(
+                onTap: () {
+                  homepage.updateData();
+                },
+                child: const Icon(
+                  Icons.wallet,
+                  size: 36,
+                ),
+              ),
         const SizedBox(
           width: 16,
         ),
@@ -27,7 +41,7 @@ class CustomAppBarContent extends StatelessWidget {
           Card(
             child: Padding(
               padding:
-                  const EdgeInsets.only(left: 24, right: 24, top: 4, bottom: 4),
+                  const EdgeInsets.only(left: 24, right: 24, top: 2, bottom: 2),
               child: Text(
                 "฿ $balance",
                 style: GoogleFonts.kanit(
