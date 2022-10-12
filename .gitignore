@@ -1,4 +1,8 @@
 moneytracker_app/android/*
+moneytracker_app/windows/*
+moneytracker_app/ios/*
+moneytracker_app/linux/*
+moneytracker_app/macos/*
 moneytracker_app/web/*
 moneytracker_app/build/*
 moneytracker_app/.dart_tool/*
