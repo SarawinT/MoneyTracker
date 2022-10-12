@@ -3,3 +3,8 @@ moneytracker_app/web/*
 moneytracker_app/build/*
 moneytracker_app/.dart_tool/*
 moneytracker_app/.idea/*
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
