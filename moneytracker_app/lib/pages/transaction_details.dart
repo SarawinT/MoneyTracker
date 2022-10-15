@@ -82,7 +82,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         title: CustomAppBarContent(balance: -1),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 16, bottom: 16, left: 24, right: 24),
+        padding:
+            const EdgeInsets.only(top: 16, bottom: 16, left: 24, right: 24),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             children: [
@@ -111,10 +112,44 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   splashRadius: 18),
               IconButton(
                   onPressed: () async {
-                    Object status = EditDeleteStatus.empty;
-                    status = await _deleteTransaction();
-                    if (status == EditDeleteStatus.deleteSuccess) {
-                      Navigator.pop(context, status);
+                    var statusD = await showDialog(
+                        context: context,
+                        builder: (BuildContext buildContext) {
+                          return AlertDialog(
+                            title: Text(
+                              "Delete Confirmation",
+                              style: GoogleFonts.kanit(
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            content: Text(
+                              "Delete this transaction?",
+                              style: GoogleFonts.kanit(),
+                            ),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(
+                                        context, EditDeleteStatus.empty);
+                                  },
+                                  child:
+                                      Text("No", style: GoogleFonts.kanit())),
+                              TextButton(
+                                  onPressed: () async {
+                                    Object status = EditDeleteStatus.empty;
+                                    status = await _deleteTransaction();
+                                    if (status ==
+                                        EditDeleteStatus.deleteSuccess) {
+                                      Navigator.pop(context,
+                                          EditDeleteStatus.deleteSuccess);
+                                    }
+                                  },
+                                  child:
+                                      Text("Yes", style: GoogleFonts.kanit()))
+                            ],
+                          );
+                        });
+                    if (statusD == EditDeleteStatus.deleteSuccess) {
+                      Navigator.pop(context, statusD);
                     }
                   },
                   icon: const Icon(Icons.delete),
