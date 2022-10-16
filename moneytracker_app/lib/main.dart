@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
 
 void main() {
@@ -15,6 +16,9 @@ class MyApp extends StatelessWidget {
       title: 'Money Tracker',
       theme: ThemeData(
         primarySwatch: Colors.green,
+        textTheme: GoogleFonts.kanitTextTheme(
+          Theme.of(context).textTheme,
+        ),
       ),
       home: const Homepage(),
     );

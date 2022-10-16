@@ -18,8 +18,12 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pop(context, CategoryData(name: name, isExpense: isExpense, icon: icon));
+        Navigator.pop(context,
+            CategoryData(name: name, isExpense: isExpense, icon: icon));
       },
+      customBorder: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(

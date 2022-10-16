@@ -21,11 +21,14 @@ class Homepage extends StatefulWidget {
 
 class HomepageState extends State<Homepage> {
   double balance = -1;
-  late List<dynamic> datedTransactions = [];
+  late List<dynamic> datedTransactions = ["Loading..."];
 
   Future<List> _getTransaction() async {
     var response =
         await http.get(Uri.http("127.0.0.1:8000", "/transaction/MeisterAP"));
+    if (response.statusCode != 200) {
+      return [null];
+    }
     var jsonData = jsonDecode(response.body);
     if (jsonData == null) return [];
     List<DatedTransaction> dt = [];
@@ -49,6 +52,9 @@ class HomepageState extends State<Homepage> {
   Future<double> _getBalance() async {
     var response =
         await http.get(Uri.http("127.0.0.1:8000", "/user/MeisterAP"));
+    if (response.statusCode != 200) {
+      return -1;
+    }
     var jsonData = jsonDecode(response.body);
     return jsonData['Balance'];
   }
@@ -79,6 +85,97 @@ class HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget pageBody;
+    if (datedTransactions.isEmpty) {
+      pageBody = Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.add_box_outlined,
+              size: 96,
+              color: Color.fromARGB(255, 125, 125, 125),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              "No transactions",
+              style: GoogleFonts.kanit(
+                  fontSize: 24,
+                  color: const Color.fromARGB(255, 125, 125, 125)),
+            )
+          ],
+        ),
+      );
+    } else if (datedTransactions[0] == "Loading...") {
+      pageBody = Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              "Loading...",
+              style: GoogleFonts.kanit(
+                  fontSize: 24,
+                  color: const Color.fromARGB(255, 125, 125, 125)),
+            )
+          ],
+        ),
+      );
+    } else if (datedTransactions[0] == null) {
+      pageBody = Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error_outline,
+              size: 96,
+              color: Color.fromARGB(255, 125, 125, 125),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              "Unexpected Error!",
+              style: GoogleFonts.kanit(
+                  fontSize: 24,
+                  color: const Color.fromARGB(255, 125, 125, 125)),
+            )
+          ],
+        ),
+      );
+    } else {
+      pageBody = ListView.builder(
+          itemBuilder: (BuildContext buildContext, int i) {
+            return Column(
+              children: [
+                DateCard(
+                    date: datedTransactions[i].date,
+                    sum: datedTransactions[i].sum),
+                for (int j = 0;
+                    j < datedTransactions[i].transactions.length;
+                    ++j)
+                  TransactionCard(
+                    icon: datedTransactions[i].transactions[j].amount > 0
+                        ? CategoryList.getIconIncome(
+                            datedTransactions[i].transactions[j].category)
+                        : CategoryList.getIconExpense(
+                            datedTransactions[i].transactions[j].category),
+                    transaction: datedTransactions[i].transactions[j],
+                  ),
+                const SizedBox(
+                  height: 4,
+                )
+              ],
+            );
+          },
+          itemCount: datedTransactions.length);
+    }
+
     return Scaffold(
       appBar: AppBar(title: CustomAppBarContent(balance: balance)),
       floatingActionButton: FloatingActionButton(
@@ -97,51 +194,7 @@ class HomepageState extends State<Homepage> {
         },
         child: const Icon(Icons.add),
       ),
-      body: datedTransactions.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.add_box_outlined,
-                    size: 96,
-                    color: Color.fromARGB(255, 125, 125, 125),
-                  ),
-                  const SizedBox(height: 16,),
-                  Text(
-                    "No transactions",
-                    style: GoogleFonts.kanit(
-                        fontSize: 24,
-                        color: const Color.fromARGB(255, 125, 125, 125)),
-                  )
-                ],
-              ),
-            )
-          : ListView.builder(
-              itemBuilder: (BuildContext buildContext, int i) {
-                return Column(
-                  children: [
-                    DateCard(
-                        date: datedTransactions[i].date,
-                        sum: datedTransactions[i].sum),
-                    for (int j = 0;
-                        j < datedTransactions[i].transactions.length;
-                        ++j)
-                      TransactionCard(
-                        icon: datedTransactions[i].transactions[j].amount > 0
-                            ? CategoryList.getIconIncome(
-                                datedTransactions[i].transactions[j].category)
-                            : CategoryList.getIconExpense(
-                                datedTransactions[i].transactions[j].category),
-                        transaction: datedTransactions[i].transactions[j],
-                      ),
-                    const SizedBox(
-                      height: 4,
-                    )
-                  ],
-                );
-              },
-              itemCount: datedTransactions.length),
+      body: pageBody,
     );
   }
 }

@@ -23,7 +23,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
   String _selectedCategory = "Select category";
   bool _isExpense = true;
   IconData _icon = Icons.question_mark;
-String _feedback = "";
+  String _feedback = "";
 
   @override
   void initState() {
@@ -33,10 +33,11 @@ String _feedback = "";
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: _selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime.now());
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime.now(),
+    );
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
@@ -132,7 +133,7 @@ String _feedback = "";
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Add transaction",
+              "Create transaction",
               style:
                   GoogleFonts.kanit(fontSize: 28, fontWeight: FontWeight.w500),
             ),
@@ -166,6 +167,9 @@ String _feedback = "";
                         _icon = cData.icon;
                       });
                     },
+                    customBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                     child: Container(
                       decoration: const BoxDecoration(
                         border: Border(
@@ -254,6 +258,9 @@ String _feedback = "";
                     onTap: () {
                       _selectDate(context);
                     },
+                    customBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                     child: Container(
                       decoration: const BoxDecoration(
                         border: Border(
