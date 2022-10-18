@@ -38,6 +38,8 @@ class TransactionDetails extends StatefulWidget {
 }
 
 class _TransactionDetailsState extends State<TransactionDetails> {
+  final NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
+
   Future<Object> _deleteTransaction() async {
     var response = await http.delete(
       Uri.parse(
@@ -182,12 +184,12 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   ),
                   widget.transaction.amount > 0
                       ? Text(
-                          "฿ ${widget.transaction.amount}",
+                          "฿ ${moneyFormat.format(widget.transaction.amount)}",
                           style: GoogleFonts.kanit(
                               fontSize: 20, color: Colors.blue),
                         )
                       : Text(
-                          "- ฿ ${widget.transaction.amount * -1}",
+                          "- ฿ ${moneyFormat.format(widget.transaction.amount * -1)}",
                           style: GoogleFonts.kanit(
                               fontSize: 20, color: Colors.red),
                         )

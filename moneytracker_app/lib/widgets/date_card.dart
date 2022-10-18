@@ -3,10 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class DateCard extends Card {
+  NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   final String date;
   final double sum;
 
-  const DateCard({Key? key, required this.date, required this.sum}) : super(key: key);
+  DateCard({Key? key, required this.date, required this.sum}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class DateCard extends Card {
               ],
             )),
             Text(
-              "$sum",
+              moneyFormat.format(sum),
               style: GoogleFonts.kanit(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,

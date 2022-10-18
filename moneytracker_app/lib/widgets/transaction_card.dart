@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:moneytracker_app/models/transaction.dart';
 import 'package:moneytracker_app/pages/transaction_details.dart';
 
@@ -14,12 +15,11 @@ enum EditDeleteStatus {
 }
 
 class TransactionCard extends StatelessWidget {
+  NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   final IconData icon;
   final Transaction transaction;
 
-
-  const TransactionCard(
-      {Key? key, required this.icon, required this.transaction})
+  TransactionCard({Key? key, required this.icon, required this.transaction})
       : super(key: key);
 
   int getID() {
@@ -76,16 +76,12 @@ class TransactionCard extends StatelessWidget {
                   )
                 ],
               )),
-              transaction.amount > 0
-                  ? Text(
-                      "${transaction.amount}",
-                      style:
-                          GoogleFonts.kanit(fontSize: 24, color: Colors.blue),
-                    )
-                  : Text(
-                      "${transaction.amount}",
-                      style: GoogleFonts.kanit(fontSize: 24, color: Colors.red),
-                    )
+              Text(
+                moneyFormat.format(transaction.amount),
+                style: transaction.amount > 0
+                    ? GoogleFonts.kanit(fontSize: 24, color: Colors.blue)
+                    : GoogleFonts.kanit(fontSize: 24, color: Colors.red),
+              )
             ],
           ),
         ));

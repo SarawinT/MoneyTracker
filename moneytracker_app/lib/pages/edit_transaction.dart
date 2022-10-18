@@ -13,7 +13,7 @@ import 'package:moneytracker_app/widgets/transaction_card.dart';
 import '../models/transaction.dart';
 
 class EditTransaction extends StatefulWidget {
-  Transaction transaction;
+  final Transaction transaction;
   EditTransaction({Key? key, required this.transaction}) : super(key: key);
 
   @override

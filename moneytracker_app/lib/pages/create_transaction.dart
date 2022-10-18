@@ -16,6 +16,7 @@ class CreateTransaction extends StatefulWidget {
 }
 
 class _CreateTransactionState extends State<CreateTransaction> {
+  NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -96,7 +97,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomAppBarContent(balance: -1),
+        title: CustomAppBarContent(balance: -1),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
