@@ -25,8 +25,7 @@ class Transaction {
   }
 
   void printCheck() {
-    print("  - ID: $id, Category: $category, Amount: $amount, Date: $date, Note: $note, Username: $username");
+    print(
+        "  - ID: $id, Category: $category, Amount: $amount, Date: $date, Note: $note, Username: $username");
   }
-
-
 }

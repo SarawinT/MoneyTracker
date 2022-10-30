@@ -33,6 +33,7 @@ class _EditTransactionState extends State<EditTransaction> {
 
   @override
   void initState() {
+    if (widget.transaction.amount > 0) _isExpense = false;
     _amountController.text = widget.transaction.amount > 0
         ? widget.transaction.amount.toString()
         : (widget.transaction.amount * -1).toString();

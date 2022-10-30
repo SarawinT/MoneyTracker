@@ -8,6 +8,8 @@ import 'package:moneytracker_app/widgets/category_selector.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:http/http.dart' as http;
 
+import 'homepage.dart';
+
 class CreateTransaction extends StatefulWidget {
   const CreateTransaction({Key? key}) : super(key: key);
 
@@ -16,6 +18,7 @@ class CreateTransaction extends StatefulWidget {
 }
 
 class _CreateTransactionState extends State<CreateTransaction> {
+  late String username;
   NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
@@ -28,8 +31,8 @@ class _CreateTransactionState extends State<CreateTransaction> {
 
   @override
   void initState() {
-    _formatDate();
     super.initState();
+    _formatDate();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -105,7 +108,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
           setState(() {
             if (_selectedCategory == "Select category") {
               _feedback = "Please select category";
-            } else if (_amountController.text.isEmpty) {
+            } else if (_amountController.text.isEmpty || _amountController.text == '0') {
               _feedback = "Please enter amount";
             } else {
               _feedback = "";

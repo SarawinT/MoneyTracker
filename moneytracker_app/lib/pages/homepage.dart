@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneytracker_app/models/dated_transaction.dart';
 import 'package:moneytracker_app/pages/create_transaction.dart';
@@ -13,19 +14,23 @@ import '../models/category_list.dart';
 import '../models/transaction.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({Key? key}) : super(key: key);
+  String username;
+  Homepage({Key? key, required this.username}) : super(key: key);
 
   @override
-  State<Homepage> createState() => HomepageState();
+  State<Homepage> createState() => HomepageState(username: username);
 }
 
 class HomepageState extends State<Homepage> {
+
+  String username = "MeisterAP";
   double balance = -1;
   late List<dynamic> datedTransactions = ["Loading..."];
+  HomepageState({required this.username});
 
   Future<List> _getTransaction() async {
     var response =
-        await http.get(Uri.http("127.0.0.1:8000", "/transaction/MeisterAP"));
+        await http.get(Uri.http("127.0.0.1:8000", "/transaction/$username"));
     if (response.statusCode != 200) {
       return [null];
     }
@@ -51,7 +56,7 @@ class HomepageState extends State<Homepage> {
 
   Future<double> _getBalance() async {
     var response =
-        await http.get(Uri.http("127.0.0.1:8000", "/user/MeisterAP"));
+        await http.get(Uri.http("127.0.0.1:8000", "/user/$username"));
     if (response.statusCode != 200) {
       return -1;
     }
@@ -77,10 +82,16 @@ class HomepageState extends State<Homepage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  Future<void> readUsername() async {
+    final String response = await rootBundle.loadString('config/config.json');
+    username = jsonDecode(response)['Username'];
+  }
+
   @override
   void initState() {
-    updateData();
     super.initState();
+    readUsername();
+    updateData();
   }
 
   @override
