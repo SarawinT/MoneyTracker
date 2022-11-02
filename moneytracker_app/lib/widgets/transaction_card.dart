@@ -18,8 +18,13 @@ class TransactionCard extends StatelessWidget {
   NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   final IconData icon;
   final Transaction transaction;
+  final String username;
 
-  TransactionCard({Key? key, required this.icon, required this.transaction})
+  TransactionCard(
+      {Key? key,
+      required this.icon,
+      required this.transaction,
+      required this.username})
       : super(key: key);
 
   int getID() {
@@ -38,6 +43,7 @@ class TransactionCard extends StatelessWidget {
                 builder: (context) => TransactionDetails(
                       transaction: transaction,
                       icon: icon,
+                      username: username,
                     )),
           );
 

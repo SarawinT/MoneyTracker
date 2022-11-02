@@ -12,8 +12,13 @@ import 'package:moneytracker_app/widgets/transaction_card.dart';
 class TransactionDetails extends StatefulWidget {
   final Transaction transaction;
   final IconData icon;
+  final String username;
   String _formattedDate = "";
-  TransactionDetails({Key? key, required this.transaction, required this.icon})
+  TransactionDetails(
+      {Key? key,
+      required this.transaction,
+      required this.icon,
+      required this.username})
       : super(key: key) {
     _formatDate();
   }
@@ -43,7 +48,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   Future<Object> _deleteTransaction() async {
     var response = await http.delete(
       Uri.parse(
-          'http://127.0.0.1:8000/transaction/MeisterAP/${widget.transaction.id}'),
+          'http://127.0.0.1:8000/transaction/${widget.username}/${widget.transaction.id}'),
     );
 
     if (response.statusCode == 200) {
@@ -55,7 +60,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
 
   void _updateTransaction() async {
     var response = await http.get(Uri.http("127.0.0.1:8000",
-        "/transaction/MeisterAP/id/${widget.transaction.id}"));
+        "/transaction/${widget.username}/id/${widget.transaction.id}"));
     var jsonData = jsonDecode(response.body);
     widget.transaction.category = jsonData['Category'];
     widget.transaction.amount = jsonData['Amount'];
@@ -81,7 +86,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomAppBarContent(balance: -1),
+        title: CustomAppBarContent(),
       ),
       body: Padding(
         padding:
@@ -101,8 +106,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     var editResponse = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              EditTransaction(transaction: widget.transaction)),
+                          builder: (context) => EditTransaction(
+                                transaction: widget.transaction,
+                                username: widget.username,
+                              )),
                     );
 
                     if (editResponse == EditDeleteStatus.editSuccess) {

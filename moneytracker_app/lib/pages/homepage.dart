@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneytracker_app/models/dated_transaction.dart';
 import 'package:moneytracker_app/pages/create_transaction.dart';
@@ -22,8 +21,7 @@ class Homepage extends StatefulWidget {
 }
 
 class HomepageState extends State<Homepage> {
-
-  String username = "MeisterAP";
+  final String username;
   double balance = -1;
   late List<dynamic> datedTransactions = ["Loading..."];
   HomepageState({required this.username});
@@ -82,15 +80,9 @@ class HomepageState extends State<Homepage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Future<void> readUsername() async {
-    final String response = await rootBundle.loadString('config/config.json');
-    username = jsonDecode(response)['Username'];
-  }
-
   @override
   void initState() {
     super.initState();
-    readUsername();
     updateData();
   }
 
@@ -177,6 +169,7 @@ class HomepageState extends State<Homepage> {
                         : CategoryList.getIconExpense(
                             datedTransactions[i].transactions[j].category),
                     transaction: datedTransactions[i].transactions[j],
+                    username: widget.username,
                   ),
                 const SizedBox(
                   height: 4,
@@ -188,12 +181,19 @@ class HomepageState extends State<Homepage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: CustomAppBarContent(balance: balance)),
+      appBar: AppBar(
+          title: CustomAppBarContent(
+        balance: balance,
+        username: widget.username,
+      )),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var createResponse = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const CreateTransaction()),
+            MaterialPageRoute(
+                builder: (context) => CreateTransaction(
+                      username: widget.username,
+                    )),
           );
           if (createResponse == null) {
             return;

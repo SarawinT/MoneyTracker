@@ -14,7 +14,9 @@ import '../models/transaction.dart';
 
 class EditTransaction extends StatefulWidget {
   final Transaction transaction;
-  EditTransaction({Key? key, required this.transaction}) : super(key: key);
+  final String username;
+  EditTransaction({Key? key, required this.transaction, required this.username})
+      : super(key: key);
 
   @override
   State<EditTransaction> createState() => _EditTransactionState();
@@ -95,7 +97,7 @@ class _EditTransactionState extends State<EditTransaction> {
     });
 
     var response = await http.put(
-      Uri.parse('http://127.0.0.1:8000/transaction/MeisterAP'),
+      Uri.parse('http://127.0.0.1:8000/transaction/${widget.username}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -111,10 +113,9 @@ class _EditTransactionState extends State<EditTransaction> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: CustomAppBarContent(balance: -1),
+        title: CustomAppBarContent(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

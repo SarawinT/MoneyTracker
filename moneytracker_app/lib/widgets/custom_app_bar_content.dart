@@ -6,13 +6,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
 import 'package:http/http.dart' as http;
+import 'package:moneytracker_app/widgets/info_dialog.dart';
 
 class CustomAppBarContent extends StatelessWidget {
-  double balance;
   NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
+  late double balance;
   final TextEditingController _amountController = TextEditingController();
+  late final String username;
 
-  CustomAppBarContent({Key? key, required this.balance}) : super(key: key);
+  CustomAppBarContent({Key? key, double balance = -1, String username = ""}) {
+    this.balance = balance;
+    this.username = username;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,38 +38,7 @@ class CustomAppBarContent extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return Dialog(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: SizedBox(
-                            height: 250,
-                            width: 150,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
-                                  "About this app",
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                      "Flutter Project for 517324 Mobile Application Development, "
-                                          "Silpakorn University  (2022)\n\n"
-                                          "♥🧡💛💚💙💜"),
-                                ),
-                                Text("Created by Sarawin Thiamthet"),
-                                Text("GitHub : github.com/SarawinT"),
-                                Text("Email : contact.sarawin@gmail.com")
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
+                      return const InfoDialog();
                     },
                   );
                 },
@@ -104,7 +78,7 @@ class CustomAppBarContent extends StatelessWidget {
                               balance =
                                   double.tryParse(_amountController.text)!;
                               String requestJson = jsonEncode(<String, dynamic>{
-                                'Username': "MeisterAP",
+                                'Username': username,
                                 'Balance': balance,
                               });
                               var response = await http.put(

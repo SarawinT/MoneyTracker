@@ -11,7 +11,9 @@ import 'package:http/http.dart' as http;
 import 'homepage.dart';
 
 class CreateTransaction extends StatefulWidget {
-  const CreateTransaction({Key? key}) : super(key: key);
+  final String username;
+
+  const CreateTransaction({Key? key, required this.username}) : super(key: key);
 
   @override
   State<CreateTransaction> createState() => _CreateTransactionState();
@@ -82,7 +84,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
     });
 
     var response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/transaction/MeisterAP'),
+      Uri.parse('http://127.0.0.1:8000/transaction/${widget.username}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -100,7 +102,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomAppBarContent(balance: -1),
+        title: CustomAppBarContent(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -108,7 +110,8 @@ class _CreateTransactionState extends State<CreateTransaction> {
           setState(() {
             if (_selectedCategory == "Select category") {
               _feedback = "Please select category";
-            } else if (_amountController.text.isEmpty || _amountController.text == '0') {
+            } else if (_amountController.text.isEmpty ||
+                _amountController.text == '0') {
               _feedback = "Please enter amount";
             } else {
               _feedback = "";
