@@ -21,6 +21,7 @@ class Homepage extends StatefulWidget {
 }
 
 class HomepageState extends State<Homepage> {
+  TransactionListStatus listStatus = TransactionListStatus.loading;
   final String username;
   double balance = -1;
   late List<dynamic> datedTransactions = ["Loading..."];
@@ -80,6 +81,18 @@ class HomepageState extends State<Homepage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  void _setListStatus() {
+    if (datedTransactions.isEmpty) {
+      listStatus = TransactionListStatus.empty;
+    } else if (datedTransactions[0] == "Loading...") {
+      listStatus = TransactionListStatus.loading;
+    } else if (datedTransactions[0] == null) {
+      listStatus = TransactionListStatus.error;
+    } else {
+      listStatus = TransactionListStatus.normal;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -89,95 +102,114 @@ class HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     Widget pageBody;
-    if (datedTransactions.isEmpty) {
-      pageBody = Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.add_box_outlined,
-              size: 96,
-              color: Color.fromARGB(255, 125, 125, 125),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              "No transactions",
-              style: GoogleFonts.kanit(
-                  fontSize: 24,
-                  color: const Color.fromARGB(255, 125, 125, 125)),
-            )
-          ],
-        ),
-      );
-    } else if (datedTransactions[0] == "Loading...") {
-      pageBody = Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              "Loading...",
-              style: GoogleFonts.kanit(
-                  fontSize: 24,
-                  color: const Color.fromARGB(255, 125, 125, 125)),
-            )
-          ],
-        ),
-      );
-    } else if (datedTransactions[0] == null) {
-      pageBody = Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              size: 96,
-              color: Color.fromARGB(255, 125, 125, 125),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              "Unexpected Error!",
-              style: GoogleFonts.kanit(
-                  fontSize: 24,
-                  color: const Color.fromARGB(255, 125, 125, 125)),
-            )
-          ],
-        ),
-      );
-    } else {
-      pageBody = ListView.builder(
-          itemBuilder: (BuildContext buildContext, int i) {
-            return Column(
+    _setListStatus();
+
+    switch (listStatus) {
+      case TransactionListStatus.empty:
+        {
+          pageBody = Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                DateCard(
-                    date: datedTransactions[i].date,
-                    sum: datedTransactions[i].sum),
-                for (int j = 0;
-                    j < datedTransactions[i].transactions.length;
-                    ++j)
-                  TransactionCard(
-                    icon: datedTransactions[i].transactions[j].amount > 0
-                        ? CategoryList.getIconIncome(
-                            datedTransactions[i].transactions[j].category)
-                        : CategoryList.getIconExpense(
-                            datedTransactions[i].transactions[j].category),
-                    transaction: datedTransactions[i].transactions[j],
-                    username: widget.username,
-                  ),
+                const Icon(
+                  Icons.add_box_outlined,
+                  size: 96,
+                  color: Color.fromARGB(255, 125, 125, 125),
+                ),
                 const SizedBox(
-                  height: 4,
+                  height: 16,
+                ),
+                Text(
+                  "No transactions",
+                  style: GoogleFonts.kanit(
+                      fontSize: 24,
+                      color: const Color.fromARGB(255, 125, 125, 125)),
                 )
               ],
-            );
-          },
-          itemCount: datedTransactions.length);
+            ),
+          );
+        }
+        setState(() {});
+        break;
+      case TransactionListStatus.loading:
+        {
+          pageBody = Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  "Loading...",
+                  style: GoogleFonts.kanit(
+                      fontSize: 24,
+                      color: const Color.fromARGB(255, 125, 125, 125)),
+                )
+              ],
+            ),
+          );
+        }
+        setState(() {});
+        break;
+      case TransactionListStatus.error:
+        {
+          pageBody = Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  size: 96,
+                  color: Color.fromARGB(255, 125, 125, 125),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  "Unexpected Error!",
+                  style: GoogleFonts.kanit(
+                      fontSize: 24,
+                      color: const Color.fromARGB(255, 125, 125, 125)),
+                )
+              ],
+            ),
+          );
+        }
+        setState(() {});
+        break;
+      default:
+        {
+          pageBody = ListView.builder(
+              itemBuilder: (BuildContext buildContext, int i) {
+                return Column(
+                  children: [
+                    DateCard(
+                        date: datedTransactions[i].date,
+                        sum: datedTransactions[i].sum),
+                    for (int j = 0;
+                        j < datedTransactions[i].transactions.length;
+                        ++j)
+                      TransactionCard(
+                        icon: datedTransactions[i].transactions[j].amount > 0
+                            ? CategoryList.getIconIncome(
+                                datedTransactions[i].transactions[j].category)
+                            : CategoryList.getIconExpense(
+                                datedTransactions[i].transactions[j].category),
+                        transaction: datedTransactions[i].transactions[j],
+                        username: widget.username,
+                      ),
+                    const SizedBox(
+                      height: 4,
+                    )
+                  ],
+                );
+              },
+              itemCount: datedTransactions.length);
+        }
+        setState(() {});
+        break;
     }
 
     return Scaffold(
@@ -186,25 +218,27 @@ class HomepageState extends State<Homepage> {
         balance: balance,
         username: widget.username,
       )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          var createResponse = await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreateTransaction(
-                      username: widget.username,
-                    )),
-          );
-          if (createResponse == null) {
-            return;
-          }
-          if (createResponse) {
-            updateData();
-            showSnackBar('Transaction created');
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: (listStatus == TransactionListStatus.normal)
+          ? FloatingActionButton(
+              onPressed: () async {
+                var createResponse = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreateTransaction(
+                            username: widget.username,
+                          )),
+                );
+                if (createResponse == null) {
+                  return;
+                }
+                if (createResponse) {
+                  updateData();
+                  showSnackBar('Transaction created');
+                }
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
       body: pageBody,
     );
   }

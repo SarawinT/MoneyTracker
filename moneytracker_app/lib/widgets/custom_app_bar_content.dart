@@ -9,15 +9,12 @@ import 'package:http/http.dart' as http;
 import 'package:moneytracker_app/widgets/info_dialog.dart';
 
 class CustomAppBarContent extends StatelessWidget {
-  NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
+  final NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   late double balance;
   final TextEditingController _amountController = TextEditingController();
   late final String username;
 
-  CustomAppBarContent({Key? key, double balance = -1, String username = ""}) {
-    this.balance = balance;
-    this.username = username;
-  }
+  CustomAppBarContent({Key? key, this.balance = -1, this.username = ""});
 
   @override
   Widget build(BuildContext context) {

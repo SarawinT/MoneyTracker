@@ -29,3 +29,5 @@ class Transaction {
         "  - ID: $id, Category: $category, Amount: $amount, Date: $date, Note: $note, Username: $username");
   }
 }
+
+enum TransactionListStatus { empty, error, loading, normal }

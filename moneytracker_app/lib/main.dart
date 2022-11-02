@@ -19,13 +19,25 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String username = "";
+  bool _loading = true;
 
   void _loadUsername() async {
     final String response =
         await rootBundle.loadString('assets/config/config.json');
+
     setState(() {
-      username = jsonDecode(response)['Username'];
+
     });
+
+    username = jsonDecode(response)['Username'];
+
+    if (username.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 1800));
+      setState(() {
+        _loading = false;
+      });
+    }
+
   }
 
   @override
@@ -47,11 +59,11 @@ class _MyAppState extends State<MyApp> {
       ),
       home: Stack(
         children: [
-          if (username.isNotEmpty)
+          if (!_loading)
             Homepage(
               username: username,
             ),
-          if (username.isEmpty) const LoadingPage(),
+          if (_loading) LoadingPage(username: username,),
         ],
       ),
     );
