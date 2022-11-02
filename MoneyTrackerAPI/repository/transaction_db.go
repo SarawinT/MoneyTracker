@@ -17,6 +17,7 @@ func NewTransactionRepositoryDB(db *sqlx.DB) transactionRepositoryDB {
 }
 
 func (r transactionRepositoryDB) GetAll(username string) ([]Transaction, error) {
+
 	transactions := []Transaction{}
 	query := "SELECT ID, Category, Amount, Date, Note, Username FROM TransactionTbl WHERE Username = ? ORDER BY DATE DESC, ID DESC"
 
@@ -132,4 +133,17 @@ func (r transactionRepositoryDB) UpdateUserBalance(username string, balance floa
 	}
 
 	return r.GetUserBalance(username)
+}
+
+func (r transactionRepositoryDB) GetUser(username string) (*User, error) {
+	user := User{}
+	query := "SELECT Username, Balance FROM UserTbl WHERE Username = ?"
+
+	err := r.db.Get(&user, query, username)
+	if err != nil {
+		logs.Error(err)
+		return nil, err
+	}
+
+	return &user, err
 }

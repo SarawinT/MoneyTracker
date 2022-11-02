@@ -18,4 +18,5 @@ type TransactionRepository interface {
 	Delete(username string, id int) (*Transaction, error)
 	GetUserBalance(username string) (*float32, error)
 	UpdateUserBalance(username string, balance float32) (*float32, error)
+	GetUser(username string) (*User, error)
 }

@@ -15,6 +15,12 @@ func NewTransactionService(transactionRepo repository.TransactionRepository) tra
 }
 
 func (s transactionService) GetAll(username string) ([]Transaction, error) {
+	_, err := s.transactionRepo.GetUser(username)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
+	}
+
 	transactions, err := s.transactionRepo.GetAll(username)
 	if err != nil {
 		logs.Error(err)
@@ -39,6 +45,12 @@ func (s transactionService) GetAll(username string) ([]Transaction, error) {
 }
 
 func (s transactionService) GetAllDated(username string) ([]DatedTransactions, error) {
+	_, err := s.transactionRepo.GetUser(username)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
+	}
+
 	transactions, err := s.GetAll(username)
 	if err != nil {
 		logs.Error(err)
@@ -64,6 +76,12 @@ func (s transactionService) GetAllDated(username string) ([]DatedTransactions, e
 }
 
 func (s transactionService) GetByID(username string, id int) (*Transaction, error) {
+	_, err := s.transactionRepo.GetUser(username)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
+	}
+
 	transaction, err := s.transactionRepo.GetByID(username, id)
 	if transaction == nil {
 		return nil, errs.NewNotFoundError("id not found")
@@ -87,6 +105,12 @@ func (s transactionService) GetByID(username string, id int) (*Transaction, erro
 }
 
 func (s transactionService) GetByDate(username string, date string) ([]Transaction, error) {
+	_, err := s.transactionRepo.GetUser(username)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
+	}
+
 	transactions, err := s.transactionRepo.GetByDate(username, date)
 	if err != nil {
 		logs.Error(err)
@@ -155,6 +179,11 @@ func (s transactionService) Create(post TransactionPost) (*Transaction, error) {
 }
 
 func (s transactionService) Update(username string, id int, category string, amount float32, date string, note string) (*Transaction, error) {
+	_, err := s.transactionRepo.GetUser(username)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
+	}
 
 	checkID, err := s.transactionRepo.GetByID(username, id)
 	if checkID == nil || err != nil {
@@ -196,6 +225,12 @@ func (s transactionService) Update(username string, id int, category string, amo
 }
 
 func (s transactionService) Delete(username string, id int) (*Transaction, error) {
+	_, err := s.transactionRepo.GetUser(username)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
+	}
+
 	transaction, err := s.transactionRepo.Delete(username, id)
 	if err != nil {
 		logs.Error(err)
