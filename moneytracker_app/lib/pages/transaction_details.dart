@@ -1,25 +1,21 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytracker_app/models/transaction.dart';
 import 'package:moneytracker_app/pages/edit_transaction.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
-import 'package:http/http.dart' as http;
 import 'package:moneytracker_app/widgets/transaction_card.dart';
+import '../utils/api.dart';
 
 class TransactionDetails extends StatefulWidget {
   final Transaction transaction;
   final IconData icon;
-  final String username;
   String _formattedDate = "";
-  TransactionDetails(
-      {Key? key,
-      required this.transaction,
-      required this.icon,
-      required this.username})
-      : super(key: key) {
+  TransactionDetails({
+    Key? key,
+    required this.transaction,
+    required this.icon,
+  }) : super(key: key) {
     _formatDate();
   }
 
@@ -45,27 +41,13 @@ class TransactionDetails extends StatefulWidget {
 class _TransactionDetailsState extends State<TransactionDetails> {
   final NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
 
-  Future<Object> _deleteTransaction() async {
-    var response = await http.delete(
-      Uri.parse(
-          'http://127.0.0.1:8000/transaction/${widget.username}/${widget.transaction.id}'),
-    );
-
-    if (response.statusCode == 200) {
-      return EditDeleteStatus.deleteSuccess;
-    } else {
-      return EditDeleteStatus.deleteFail;
-    }
-  }
-
   void _updateTransaction() async {
-    var response = await http.get(Uri.http("127.0.0.1:8000",
-        "/transaction/${widget.username}/id/${widget.transaction.id}"));
-    var jsonData = jsonDecode(response.body);
-    widget.transaction.category = jsonData['Category'];
-    widget.transaction.amount = jsonData['Amount'];
-    widget.transaction.date = jsonData['Date'];
-    widget.transaction.note = jsonData['Note'];
+    Transaction toUpdate =
+        await API.getTransactionByID(id: widget.transaction.id);
+    widget.transaction.category = toUpdate.category;
+    widget.transaction.amount = toUpdate.amount;
+    widget.transaction.date = toUpdate.date;
+    widget.transaction.note = toUpdate.note;
     widget._formatDate();
 
     setState(() {});
@@ -108,7 +90,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       MaterialPageRoute(
                           builder: (context) => EditTransaction(
                                 transaction: widget.transaction,
-                                username: widget.username,
                               )),
                     );
 
@@ -145,7 +126,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                               TextButton(
                                   onPressed: () async {
                                     Object status = EditDeleteStatus.empty;
-                                    status = await _deleteTransaction();
+                                    status = await API.deleteTransaction(
+                                        id: widget.transaction.id);
                                     if (status ==
                                         EditDeleteStatus.deleteSuccess) {
                                       Navigator.pop(context,

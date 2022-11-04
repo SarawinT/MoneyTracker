@@ -1,20 +1,17 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
-import 'package:http/http.dart' as http;
 import 'package:moneytracker_app/widgets/info_dialog.dart';
+import '../utils/api.dart';
 
 class CustomAppBarContent extends StatelessWidget {
   final NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
-  late double balance;
+  late double? balance;
   final TextEditingController _amountController = TextEditingController();
-  late final String username;
 
-  CustomAppBarContent({Key? key, this.balance = -1, this.username = ""});
+  CustomAppBarContent({Key? key, this.balance}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +50,7 @@ class CustomAppBarContent extends StatelessWidget {
             style: GoogleFonts.kanit(fontSize: 24),
           ),
         ),
-        if (balance != -1)
+        if (balance != null)
           Card(
             child: InkWell(
               onTap: () {
@@ -74,18 +71,9 @@ class CustomAppBarContent extends StatelessWidget {
                               }
                               balance =
                                   double.tryParse(_amountController.text)!;
-                              String requestJson = jsonEncode(<String, dynamic>{
-                                'Username': username,
-                                'Balance': balance,
-                              });
-                              var response = await http.put(
-                                Uri.parse('http://127.0.0.1:8000/user/'),
-                                headers: <String, String>{
-                                  'Content-Type':
-                                      'application/json; charset=UTF-8',
-                                },
-                                body: requestJson,
-                              );
+
+                              var response = await API.updateUserBalance(
+                                  balance: balance!);
 
                               if (response.statusCode == 200) {
                                 Navigator.pop(context);

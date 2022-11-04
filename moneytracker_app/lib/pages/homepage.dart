@@ -1,71 +1,30 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:moneytracker_app/models/dated_transaction.dart';
 import 'package:moneytracker_app/pages/create_transaction.dart';
+import 'package:moneytracker_app/widgets/app_drawer.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/date_card.dart';
 import 'package:moneytracker_app/widgets/transaction_card.dart';
-import 'package:http/http.dart' as http;
-
 import '../models/category_list.dart';
 import '../models/transaction.dart';
+import '../utils/api.dart';
 
 class Homepage extends StatefulWidget {
-  String username;
-  Homepage({Key? key, required this.username}) : super(key: key);
+  const Homepage({Key? key}) : super(key: key);
 
   @override
-  State<Homepage> createState() => HomepageState(username: username);
+  State<Homepage> createState() => HomepageState();
 }
 
 class HomepageState extends State<Homepage> {
   TransactionListStatus listStatus = TransactionListStatus.loading;
-  final String username;
   double balance = -1;
   late List<dynamic> datedTransactions = ["Loading..."];
-  HomepageState({required this.username});
-
-  Future<List> _getTransaction() async {
-    var response =
-        await http.get(Uri.http("127.0.0.1:8000", "/transaction/$username"));
-    if (response.statusCode != 200) {
-      return [null];
-    }
-    var jsonData = jsonDecode(response.body);
-    if (jsonData == null) return [];
-    List<DatedTransaction> dt = [];
-    for (dynamic t in jsonData) {
-      List<Transaction> tList = [];
-      for (dynamic u in t['Transactions']) {
-        tList.add(Transaction(
-            id: u['ID'],
-            category: u['Category'],
-            amount: u['Amount'],
-            date: u['Date'],
-            note: u['Note'],
-            username: u['Username']));
-      }
-      dt.add(DatedTransaction(date: t['Date'], transactions: tList));
-    }
-
-    return dt;
-  }
-
-  Future<double> _getBalance() async {
-    var response =
-        await http.get(Uri.http("127.0.0.1:8000", "/user/$username"));
-    if (response.statusCode != 200) {
-      return -1;
-    }
-    var jsonData = jsonDecode(response.body);
-    return jsonData['Balance'];
-  }
+  late String month;
 
   Future updateData() async {
-    datedTransactions = await _getTransaction();
-    balance = await _getBalance();
+    datedTransactions = await API.getTransaction();
+    balance = await API.getBalance();
     setState(() {});
     return;
   }
@@ -103,7 +62,6 @@ class HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     Widget pageBody;
     _setListStatus();
-
     switch (listStatus) {
       case TransactionListStatus.empty:
         {
@@ -181,32 +139,58 @@ class HomepageState extends State<Homepage> {
         break;
       default:
         {
-          pageBody = ListView.builder(
-              itemBuilder: (BuildContext buildContext, int i) {
-                return Column(
-                  children: [
-                    DateCard(
-                        date: datedTransactions[i].date,
-                        sum: datedTransactions[i].sum),
-                    for (int j = 0;
-                        j < datedTransactions[i].transactions.length;
-                        ++j)
-                      TransactionCard(
-                        icon: datedTransactions[i].transactions[j].amount > 0
-                            ? CategoryList.getIconIncome(
-                                datedTransactions[i].transactions[j].category)
-                            : CategoryList.getIconExpense(
-                                datedTransactions[i].transactions[j].category),
-                        transaction: datedTransactions[i].transactions[j],
-                        username: widget.username,
-                      ),
-                    const SizedBox(
-                      height: 4,
-                    )
+          pageBody = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: const [
+                    Text(
+                      "   This Month",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF005E08)),
+                    ),
                   ],
-                );
-              },
-              itemCount: datedTransactions.length);
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                    itemBuilder: (BuildContext buildContext, int i) {
+                      return Column(
+                        children: [
+                          DateCard(
+                              date: datedTransactions[i].date,
+                              sum: datedTransactions[i].sum),
+                          for (int j = 0;
+                              j < datedTransactions[i].transactions.length;
+                              ++j)
+                            TransactionCard(
+                              icon:
+                                  datedTransactions[i].transactions[j].amount >
+                                          0
+                                      ? CategoryList.getIconIncome(
+                                          datedTransactions[i]
+                                              .transactions[j]
+                                              .category)
+                                      : CategoryList.getIconExpense(
+                                          datedTransactions[i]
+                                              .transactions[j]
+                                              .category),
+                              transaction: datedTransactions[i].transactions[j],
+                            ),
+                          const SizedBox(
+                            height: 4,
+                          )
+                        ],
+                      );
+                    },
+                    itemCount: datedTransactions.length),
+              ),
+            ],
+          );
         }
         setState(() {});
         break;
@@ -216,17 +200,17 @@ class HomepageState extends State<Homepage> {
       appBar: AppBar(
           title: CustomAppBarContent(
         balance: balance,
-        username: widget.username,
       )),
+      drawer: const AppDrawer(
+        pageIndex: 0,
+      ),
       floatingActionButton: (listStatus == TransactionListStatus.normal)
           ? FloatingActionButton(
               onPressed: () async {
                 var createResponse = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CreateTransaction(
-                            username: widget.username,
-                          )),
+                      builder: (context) => const CreateTransaction()),
                 );
                 if (createResponse == null) {
                   return;

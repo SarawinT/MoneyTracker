@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,16 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:moneytracker_app/models/category_list.dart';
 import 'package:moneytracker_app/widgets/category_selector.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
-import 'package:http/http.dart' as http;
 import 'package:moneytracker_app/widgets/transaction_card.dart';
-
 import '../models/transaction.dart';
+import '../utils/api.dart';
 
 class EditTransaction extends StatefulWidget {
   final Transaction transaction;
-  final String username;
-  EditTransaction({Key? key, required this.transaction, required this.username})
-      : super(key: key);
+  EditTransaction({Key? key, required this.transaction}) : super(key: key);
 
   @override
   State<EditTransaction> createState() => _EditTransactionState();
@@ -79,38 +74,6 @@ class _EditTransactionState extends State<EditTransaction> {
     }
   }
 
-  Future<EditDeleteStatus> editTransaction() async {
-    double amount;
-    if (_isExpense) {
-      amount = double.parse(_amountController.text) * -1;
-    } else {
-      amount = double.parse(_amountController.text);
-    }
-    String date = DateFormat("yyyy-M-dd").format(_selectedDate);
-
-    String requestJson = jsonEncode(<String, dynamic>{
-      'ID': widget.transaction.id,
-      'Category': _selectedCategory,
-      'Amount': amount,
-      'Date': date,
-      'Note': _noteController.text
-    });
-
-    var response = await http.put(
-      Uri.parse('http://127.0.0.1:8000/transaction/${widget.username}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: requestJson,
-    );
-
-    if (response.statusCode == 200) {
-      return EditDeleteStatus.editSuccess;
-    } else {
-      return EditDeleteStatus.editFail;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +95,13 @@ class _EditTransactionState extends State<EditTransaction> {
           });
           if (inputCheck) {
             EditDeleteStatus status = EditDeleteStatus.editSuccess;
-            status = await editTransaction();
+            status = await API.editTransaction(
+                id: widget.transaction.id,
+                isExpense: _isExpense,
+                amount: double.parse(_amountController.text),
+                category: _selectedCategory,
+                selectedDate: _selectedDate,
+                note: _noteController.text);
             if (status == EditDeleteStatus.editSuccess) {
               Navigator.pop(context, status);
             } else {

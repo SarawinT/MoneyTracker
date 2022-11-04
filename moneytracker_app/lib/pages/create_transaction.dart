@@ -1,26 +1,19 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:moneytracker_app/utils/api.dart';
 import 'package:moneytracker_app/widgets/category_selector.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
-import 'package:http/http.dart' as http;
-
-import 'homepage.dart';
 
 class CreateTransaction extends StatefulWidget {
-  final String username;
-
-  const CreateTransaction({Key? key, required this.username}) : super(key: key);
+  const CreateTransaction({Key? key}) : super(key: key);
 
   @override
   State<CreateTransaction> createState() => _CreateTransactionState();
 }
 
 class _CreateTransactionState extends State<CreateTransaction> {
-  late String username;
   NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
@@ -67,37 +60,6 @@ class _CreateTransactionState extends State<CreateTransaction> {
     }
   }
 
-  Future<bool> _createTransaction() async {
-    double amount;
-    if (_isExpense) {
-      amount = double.parse(_amountController.text) * -1;
-    } else {
-      amount = double.parse(_amountController.text);
-    }
-    String date = DateFormat("yyyy-M-dd").format(_selectedDate);
-
-    String requestJson = jsonEncode(<String, dynamic>{
-      'Category': _selectedCategory,
-      'Amount': amount,
-      'Date': date,
-      'Note': _noteController.text
-    });
-
-    var response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/transaction/${widget.username}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: requestJson,
-    );
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,7 +82,14 @@ class _CreateTransactionState extends State<CreateTransaction> {
           });
           if (inputCheck) {
             bool success = false;
-            await _createTransaction().then((value) {
+            await API
+                .createTransaction(
+                    isExpense: _isExpense,
+                    amount: double.parse(_amountController.text),
+                    category: _selectedCategory,
+                    selectedDate: _selectedDate,
+                    note: _noteController.text)
+                .then((value) {
               success = value;
             });
             if (success) {

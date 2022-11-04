@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoadingPage extends StatelessWidget {
-  String username;
+import '../appdata.dart';
 
-  LoadingPage({Key? key, this.username = ""}) : super(key: key);
+class LoadingPage extends StatelessWidget {
+
+  const LoadingPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +28,13 @@ class LoadingPage extends StatelessWidget {
           const SizedBox(
             height: 48,
           ),
-          if (username.isEmpty)
+          if (AppData.username.isEmpty)
             const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
-          if (username.isNotEmpty)
+          if (AppData.username.isNotEmpty)
             Text(
-              "Welcome $username !",
+              "Welcome ${AppData.username} !",
               style: GoogleFonts.kanit(
                   decoration: TextDecoration.none,
                   color: Colors.white,

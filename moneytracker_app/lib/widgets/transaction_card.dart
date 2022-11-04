@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:moneytracker_app/models/transaction.dart';
 import 'package:moneytracker_app/pages/transaction_details.dart';
 
+import '../appdata.dart';
 import '../pages/homepage.dart';
 
 enum EditDeleteStatus {
@@ -18,13 +19,8 @@ class TransactionCard extends StatelessWidget {
   NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   final IconData icon;
   final Transaction transaction;
-  final String username;
 
-  TransactionCard(
-      {Key? key,
-      required this.icon,
-      required this.transaction,
-      required this.username})
+  TransactionCard({Key? key, required this.icon, required this.transaction})
       : super(key: key);
 
   int getID() {
@@ -43,7 +39,6 @@ class TransactionCard extends StatelessWidget {
                 builder: (context) => TransactionDetails(
                       transaction: transaction,
                       icon: icon,
-                      username: username,
                     )),
           );
 
@@ -67,7 +62,7 @@ class TransactionCard extends StatelessWidget {
             children: [
               const SizedBox(width: 24),
               Icon(icon),
-              const SizedBox(width: 16),
+              const SizedBox(width: 24),
               Expanded(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

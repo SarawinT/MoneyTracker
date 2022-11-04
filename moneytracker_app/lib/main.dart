@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moneytracker_app/appdata.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
 import 'package:moneytracker_app/pages/loading_page.dart';
 
@@ -18,26 +18,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String username = "";
   bool _loading = true;
 
   void _loadUsername() async {
     final String response =
         await rootBundle.loadString('assets/config/config.json');
 
-    setState(() {
+    setState(() {});
 
-    });
+    AppData.username = jsonDecode(response)['Username'];
+    // username = jsonDecode(response)['Username'];
 
-    username = jsonDecode(response)['Username'];
-
-    if (username.isNotEmpty) {
+    if (AppData.username.isNotEmpty) {
       await Future.delayed(const Duration(milliseconds: 1800));
       setState(() {
         _loading = false;
       });
     }
-
   }
 
   @override
@@ -59,11 +56,8 @@ class _MyAppState extends State<MyApp> {
       ),
       home: Stack(
         children: [
-          if (!_loading)
-            Homepage(
-              username: username,
-            ),
-          if (_loading) LoadingPage(username: username,),
+          if (!_loading) const Homepage(),
+          if (_loading) LoadingPage(),
         ],
       ),
     );

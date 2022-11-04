@@ -35,8 +35,7 @@ class InfoDialog extends StatelessWidget {
               const Expanded(
                 child: Text(
                     "Flutter Project for 517324 Mobile Application Development, "
-                    "Silpakorn University  (2022)\n\n"
-                    "♥🧡💛💚💙💜"),
+                    "Silpakorn University  (2022)\n\n\n"),
               ),
               const Text("Created by Sarawin Thiamthet"),
               const Text("GitHub : github.com/SarawinT"),
