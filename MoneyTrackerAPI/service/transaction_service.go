@@ -104,14 +104,14 @@ func (s transactionService) GetByID(username string, id int) (*Transaction, erro
 
 }
 
-func (s transactionService) GetByDate(username string, date string) ([]Transaction, error) {
+func (s transactionService) GetByDate(username string, from string, to string) ([]Transaction, error) {
 	_, err := s.transactionRepo.GetUser(username)
 	if err != nil {
 		logs.Error(err)
 		return nil, errs.NewUnexpectedError()
 	}
 
-	transactions, err := s.transactionRepo.GetByDate(username, date)
+	transactions, err := s.transactionRepo.GetByDate(username, from, to)
 	if err != nil {
 		logs.Error(err)
 		return nil, errs.NewUnexpectedError()
@@ -132,6 +132,36 @@ func (s transactionService) GetByDate(username string, date string) ([]Transacti
 
 	return transactionsResponses, nil
 
+}
+
+func (s transactionService) GetDatedByDate(username string, from string, to string) ([]DatedTransactions, error) {
+	_, err := s.transactionRepo.GetUser(username)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
+	}
+
+	transactions, err := s.GetByDate(username, from, to)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
+	}
+
+	cDate := ""
+	var list []DatedTransactions
+	for i := 0; i < len(transactions); i++ {
+		if transactions[i].Date == cDate {
+			list[len(list)-1].Transactions = append(list[len(list)-1].Transactions, transactions[i])
+
+		} else {
+			cDate = transactions[i].Date
+			dt := DatedTransactions{Date: cDate, Transactions: []Transaction{}}
+			list = append(list, dt)
+			list[len(list)-1].Transactions = append(list[len(list)-1].Transactions, transactions[i])
+		}
+	}
+
+	return list, nil
 }
 
 func (s transactionService) Create(post TransactionPost) (*Transaction, error) {

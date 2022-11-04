@@ -44,8 +44,9 @@ func (h transactionHandler) GetByID(c *fiber.Ctx) error {
 
 func (h transactionHandler) GetByDate(c *fiber.Ctx) error {
 	username := c.Params("username")
-	date := c.Query("date")
-	transactions, err := h.transactionSrv.GetByDate(username, date)
+	from := c.Query("from")
+	to := c.Query("to")
+	transactions, err := h.transactionSrv.GetDatedByDate(username, from, to)
 	if err != nil {
 		logs.Error(err)
 		return err

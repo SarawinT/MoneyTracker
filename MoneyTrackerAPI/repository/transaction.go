@@ -12,7 +12,7 @@ type Transaction struct {
 type TransactionRepository interface {
 	GetAll(username string) ([]Transaction, error)
 	GetByID(username string, id int) (*Transaction, error)
-	GetByDate(username string, date string) ([]Transaction, error)
+	GetByDate(username string, from string, to string) ([]Transaction, error)
 	Create(Transaction) (*Transaction, error)
 	Update(username string, id int, category string, amount float32, date string, note string) (*Transaction, error)
 	Delete(username string, id int) (*Transaction, error)

@@ -43,11 +43,11 @@ func (r transactionRepositoryDB) GetByID(username string, id int) (*Transaction,
 	return &transaction, err
 }
 
-func (r transactionRepositoryDB) GetByDate(username string, date string) ([]Transaction, error) {
+func (r transactionRepositoryDB) GetByDate(username string, from string, to string) ([]Transaction, error) {
 	transactions := []Transaction{}
-	query := "SELECT ID, Category, Amount, Date, Note, Username FROM TransactionTbl WHERE Date = ? AND Username = ? ORDER BY DATE DESC, ID DESC"
+	query := "SELECT ID, Category, Amount, Date, Note, Username FROM TransactionTbl WHERE Date >= ? AND Date <= ? AND Username = ? ORDER BY DATE DESC, ID DESC"
 
-	err := r.db.Select(&transactions, query, date, username)
+	err := r.db.Select(&transactions, query, from, to, username)
 	if err != nil {
 		logs.Error(err)
 		return nil, err
