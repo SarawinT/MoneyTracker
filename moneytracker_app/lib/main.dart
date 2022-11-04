@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Money Tracker',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: AppData.primaryColor,
         textTheme: GoogleFonts.kanitTextTheme(
           Theme.of(context).textTheme,
         ),
@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
       home: Stack(
         children: [
           if (!_loading) const Homepage(),
-          if (_loading) LoadingPage(),
+          if (_loading) const LoadingPage(),
         ],
       ),
     );

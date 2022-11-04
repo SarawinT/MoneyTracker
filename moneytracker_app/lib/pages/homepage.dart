@@ -232,7 +232,7 @@ class HomepageState extends State<Homepage> {
                         height: 16,
                       ),
                       Text(
-                        "No transactions",
+                        "No Transaction",
                         style: GoogleFonts.kanit(
                             fontSize: 24,
                             color: const Color.fromARGB(255, 125, 125, 125)),

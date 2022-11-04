@@ -6,6 +6,7 @@ import 'package:moneytracker_app/models/category_list.dart';
 import 'package:moneytracker_app/widgets/category_selector.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/transaction_card.dart';
+import '../appdata.dart';
 import '../models/transaction.dart';
 import '../utils/api.dart';
 
@@ -154,9 +155,10 @@ class _EditTransactionState extends State<EditTransaction> {
                       });
                     },
                     child: Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         border: Border(
-                          bottom: BorderSide(width: 2.0, color: Colors.green),
+                          bottom: BorderSide(
+                              width: 2.0, color: AppData.primaryColor),
                         ),
                       ),
                       child: Row(
@@ -197,9 +199,10 @@ class _EditTransactionState extends State<EditTransaction> {
                 ),
                 Flexible(
                   child: Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(width: 2.0, color: Colors.green),
+                        bottom:
+                            BorderSide(width: 2.0, color: AppData.primaryColor),
                       ),
                     ),
                     child: Padding(
@@ -242,9 +245,10 @@ class _EditTransactionState extends State<EditTransaction> {
                       _selectDate(context);
                     },
                     child: Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         border: Border(
-                          bottom: BorderSide(width: 2.0, color: Colors.green),
+                          bottom: BorderSide(
+                              width: 2.0, color: AppData.primaryColor),
                         ),
                       ),
                       child: Row(
@@ -277,9 +281,10 @@ class _EditTransactionState extends State<EditTransaction> {
                 ),
                 Flexible(
                   child: Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(width: 2.0, color: Colors.green),
+                        bottom:
+                            BorderSide(width: 2.0, color: AppData.primaryColor),
                       ),
                     ),
                     child: Padding(

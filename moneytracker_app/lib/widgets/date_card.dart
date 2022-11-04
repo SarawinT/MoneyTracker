@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../appdata.dart';
+
 class DateCard extends Card {
   NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   final String date;
@@ -16,7 +18,7 @@ class DateCard extends Card {
     String monthYear = DateFormat('MMMM yyyy').format(dateTime);
 
     return Card(
-      color: Colors.lightGreen,
+      color: AppData.secondaryColor,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(

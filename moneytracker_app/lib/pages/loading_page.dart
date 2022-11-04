@@ -11,7 +11,7 @@ class LoadingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox.expand(
       child: Container(
-        color: Colors.green,
+        color: AppData.primaryColor,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           const Icon(
             Icons.wallet,
