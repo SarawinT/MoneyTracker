@@ -3,8 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytracker_app/models/transaction.dart';
 import 'package:moneytracker_app/pages/transaction_details.dart';
-
-import '../appdata.dart';
 import '../pages/homepage.dart';
 
 enum EditDeleteStatus {

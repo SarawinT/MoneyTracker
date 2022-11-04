@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:moneytracker_app/pages/create_transaction.dart';
 import 'package:moneytracker_app/widgets/app_drawer.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/date_card.dart';
 import 'package:moneytracker_app/widgets/transaction_card.dart';
+import '../appdata.dart';
 import '../models/category_list.dart';
 import '../models/transaction.dart';
 import '../utils/api.dart';
@@ -20,10 +23,12 @@ class HomepageState extends State<Homepage> {
   TransactionListStatus listStatus = TransactionListStatus.loading;
   double balance = -1;
   late List<dynamic> datedTransactions = ["Loading..."];
-  late String month;
+  late String dateTimeText = "";
 
   Future updateData() async {
-    datedTransactions = await API.getTransaction();
+    datedTransactions = await API.getTransactionsFromDateRange(
+        DateFormat("yyyy-MM-dd").format(AppData.startDate),
+        DateFormat("yyyy-MM-dd").format(AppData.endDate));
     balance = await API.getBalance();
     setState(() {});
     return;
@@ -55,6 +60,13 @@ class HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
+    AppData.startDate = DateTime.now();
+    AppData.startDate = DateTime.parse(
+        "${AppData.startDate.year}-${AppData.startDate.month}-01");
+    dateTimeText = DateFormat("MMMM yyyy").format(AppData.startDate);
+    AppData.endDate = Jiffy(Jiffy(AppData.startDate).add(months: 1).dateTime)
+        .subtract(days: 1)
+        .dateTime;
     updateData();
   }
 
@@ -63,32 +75,6 @@ class HomepageState extends State<Homepage> {
     Widget pageBody;
     _setListStatus();
     switch (listStatus) {
-      case TransactionListStatus.empty:
-        {
-          pageBody = Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.add_box_outlined,
-                  size: 96,
-                  color: Color.fromARGB(255, 125, 125, 125),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Text(
-                  "No transactions",
-                  style: GoogleFonts.kanit(
-                      fontSize: 24,
-                      color: const Color.fromARGB(255, 125, 125, 125)),
-                )
-              ],
-            ),
-          );
-        }
-        setState(() {});
-        break;
       case TransactionListStatus.loading:
         {
           pageBody = Center(
@@ -145,50 +131,115 @@ class HomepageState extends State<Homepage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  children: const [
-                    Text(
-                      "   This Month",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF005E08)),
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          AppData.startDate = Jiffy(AppData.startDate)
+                              .subtract(months: 1)
+                              .dateTime;
+                          AppData.endDate = Jiffy(Jiffy(AppData.startDate)
+                                  .add(months: 1)
+                                  .dateTime)
+                              .subtract(days: 1)
+                              .dateTime;
+                          setState(() {
+                            dateTimeText = DateFormat("MMMM yyyy")
+                                .format(AppData.startDate);
+                          });
+                          updateData();
+                        },
+                        icon: const Icon(Icons.chevron_left),
+                        splashRadius: 22),
+                    SizedBox(
+                      width: 156,
+                      child: Text(
+                        dateTimeText,
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF005E08)),
+                      ),
                     ),
+                    IconButton(
+                        onPressed: () {
+                          AppData.startDate =
+                              Jiffy(AppData.startDate).add(months: 1).dateTime;
+                          AppData.endDate = Jiffy(Jiffy(AppData.startDate)
+                                  .add(months: 1)
+                                  .dateTime)
+                              .subtract(days: 1)
+                              .dateTime;
+                          setState(() {
+                            dateTimeText = DateFormat("MMMM yyyy")
+                                .format(AppData.startDate);
+                          });
+                          updateData();
+                        },
+                        icon: const Icon(Icons.chevron_right),
+                        splashRadius: 22),
                   ],
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                    itemBuilder: (BuildContext buildContext, int i) {
-                      return Column(
-                        children: [
-                          DateCard(
-                              date: datedTransactions[i].date,
-                              sum: datedTransactions[i].sum),
-                          for (int j = 0;
-                              j < datedTransactions[i].transactions.length;
-                              ++j)
-                            TransactionCard(
-                              icon:
-                                  datedTransactions[i].transactions[j].amount >
-                                          0
-                                      ? CategoryList.getIconIncome(
-                                          datedTransactions[i]
-                                              .transactions[j]
-                                              .category)
-                                      : CategoryList.getIconExpense(
-                                          datedTransactions[i]
-                                              .transactions[j]
-                                              .category),
-                              transaction: datedTransactions[i].transactions[j],
-                            ),
-                          const SizedBox(
-                            height: 4,
-                          )
-                        ],
-                      );
-                    },
-                    itemCount: datedTransactions.length),
-              ),
+              if (listStatus == TransactionListStatus.normal)
+                Expanded(
+                  child: ListView.builder(
+                      itemBuilder: (BuildContext buildContext, int i) {
+                        return Column(
+                          children: [
+                            DateCard(
+                                date: datedTransactions[i].date,
+                                sum: datedTransactions[i].sum),
+                            for (int j = 0;
+                                j < datedTransactions[i].transactions.length;
+                                ++j)
+                              TransactionCard(
+                                icon: datedTransactions[i]
+                                            .transactions[j]
+                                            .amount >
+                                        0
+                                    ? CategoryList.getIconIncome(
+                                        datedTransactions[i]
+                                            .transactions[j]
+                                            .category)
+                                    : CategoryList.getIconExpense(
+                                        datedTransactions[i]
+                                            .transactions[j]
+                                            .category),
+                                transaction:
+                                    datedTransactions[i].transactions[j],
+                              ),
+                            const SizedBox(
+                              height: 4,
+                            )
+                          ],
+                        );
+                      },
+                      itemCount: datedTransactions.length),
+                ),
+              if (listStatus == TransactionListStatus.empty)
+                Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 196,
+                      ),
+                      const Icon(
+                        Icons.add_box_outlined,
+                        size: 96,
+                        color: Color.fromARGB(255, 125, 125, 125),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        "No transactions",
+                        style: GoogleFonts.kanit(
+                            fontSize: 24,
+                            color: const Color.fromARGB(255, 125, 125, 125)),
+                      )
+                    ],
+                  ),
+                ),
             ],
           );
         }
@@ -204,7 +255,8 @@ class HomepageState extends State<Homepage> {
       drawer: const AppDrawer(
         pageIndex: 0,
       ),
-      floatingActionButton: (listStatus == TransactionListStatus.normal)
+      floatingActionButton: (listStatus == TransactionListStatus.normal ||
+              listStatus == TransactionListStatus.empty)
           ? FloatingActionButton(
               onPressed: () async {
                 var createResponse = await Navigator.push(

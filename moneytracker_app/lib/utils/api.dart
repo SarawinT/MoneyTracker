@@ -7,12 +7,42 @@ import 'package:http/http.dart' as http;
 import '../widgets/transaction_card.dart';
 
 class API {
-
   static String baseUrl = "127.0.0.1:8000";
 
-  static Future<List> getTransaction() async {
-    var response = await http
-        .get(Uri.http(baseUrl, "/transaction/${AppData.username}"));
+  static Future<List> getTransactions() async {
+    var response =
+        await http.get(Uri.http(baseUrl, "/transaction/${AppData.username}"));
+    if (response.statusCode != 200) {
+      return [null];
+    }
+    var jsonData = jsonDecode(response.body);
+    if (jsonData == null) return [];
+    List<DatedTransaction> dt = [];
+    for (dynamic t in jsonData) {
+      List<Transaction> tList = [];
+      for (dynamic u in t['Transactions']) {
+        tList.add(Transaction(
+            id: u['ID'],
+            category: u['Category'],
+            amount: u['Amount'],
+            date: u['Date'],
+            note: u['Note'],
+            username: u['Username']));
+      }
+      dt.add(DatedTransaction(date: t['Date'], transactions: tList));
+    }
+
+    return dt;
+  }
+
+  static Future<List> getTransactionsFromDateRange(
+      String from, String to) async {
+    final queryParameters = {
+      'from': from,
+      'to': to,
+    };
+    var response = await http.get(Uri.http(baseUrl,
+        "/transaction/${AppData.username}/date/", queryParameters));
     if (response.statusCode != 200) {
       return [null];
     }
@@ -133,8 +163,8 @@ class API {
   }
 
   static Future<Transaction> getTransactionByID({required int id}) async {
-    var response = await http.get(
-        Uri.http(baseUrl, "/transaction/${AppData.username}/id/$id"));
+    var response = await http
+        .get(Uri.http(baseUrl, "/transaction/${AppData.username}/id/$id"));
     var jsonData = jsonDecode(response.body);
     return Transaction(
         id: id,
@@ -145,7 +175,8 @@ class API {
         username: AppData.username);
   }
 
-  static Future<http.Response> updateUserBalance({required double balance}) async {
+  static Future<http.Response> updateUserBalance(
+      {required double balance}) async {
     String requestJson = jsonEncode(<String, dynamic>{
       'Username': AppData.username,
       'Balance': balance,
