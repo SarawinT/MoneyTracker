@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
 import 'package:moneytracker_app/widgets/info_dialog.dart';
-import '../utils/api.dart';
+import '../services/api.dart';
 
 class CustomAppBarContent extends StatelessWidget {
   final NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');

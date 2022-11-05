@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytracker_app/utils/api.dart';
+import 'package:moneytracker_app/services/api.dart';
 import 'package:moneytracker_app/widgets/category_selector.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 

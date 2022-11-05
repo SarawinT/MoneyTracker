@@ -9,6 +9,7 @@ class CategoryList {
     Category(icon: Icons.school, name: "Education"),
     Category(icon: Icons.shopping_bag, name: "Shopping"),
     Category(icon: Icons.medical_services, name: "Medicine"),
+    Category(icon: Icons.work, name: "Business"),
     Category(icon: Icons.add_chart, name: "Fees & Charges"),
     Category(icon: Icons.family_restroom, name: "Gifts & Donations"),
     Category(icon: Icons.handshake, name: "Lending"),
@@ -19,6 +20,8 @@ class CategoryList {
     Category(icon: Icons.card_giftcard, name: "Gift"),
     Category(icon: Icons.work, name: "Salary"),
     Category(icon: Icons.currency_exchange, name: "Refund"),
+    Category(icon: Icons.price_change_outlined, name: "Selling"),
+    Category(icon: Icons.percent, name: "Interest Money"),
     Category(icon: Icons.inventory, name: "Others"),
   ];
 

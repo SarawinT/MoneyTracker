@@ -5,7 +5,7 @@ import 'package:moneytracker_app/models/transaction.dart';
 import 'package:moneytracker_app/pages/edit_transaction.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/transaction_card.dart';
-import '../utils/api.dart';
+import '../services/api.dart';
 
 class TransactionDetails extends StatefulWidget {
   final Transaction transaction;

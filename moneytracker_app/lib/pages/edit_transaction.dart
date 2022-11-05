@@ -8,7 +8,7 @@ import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/transaction_card.dart';
 import '../appdata.dart';
 import '../models/transaction.dart';
-import '../utils/api.dart';
+import '../services/api.dart';
 
 class EditTransaction extends StatefulWidget {
   final Transaction transaction;
