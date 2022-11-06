@@ -41,6 +41,7 @@ dependencies:
   provider: ^6.0.4
   page_transition: ^2.0.9
   jiffy: ^5.0.0
+  syncfusion_flutter_charts: ^20.3.52
 
 dev_dependencies:
 

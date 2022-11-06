@@ -21,6 +21,16 @@ class DatedTransaction {
     return sum;
   }
 
+  double getTotalIncomeByCategory(String category) {
+    double sum = 0;
+    for (Transaction transaction in transactions) {
+      if (transaction.amount > 0 && transaction.category == category) {
+        sum += transaction.amount;
+      }
+    }
+    return sum;
+  }
+
   double getTotalExpense() {
     double sum = 0;
     for (Transaction transaction in transactions) {

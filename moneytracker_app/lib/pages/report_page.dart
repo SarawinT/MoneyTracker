@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:moneytracker_app/models/category_list.dart';
 import 'package:moneytracker_app/models/dated_transaction.dart';
+import 'package:moneytracker_app/widgets/categorized_chart.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/report_card.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../appdata.dart';
+import '../models/categorized_transaction_amount.dart';
+import '../models/category.dart';
+import '../models/transaction.dart';
 import '../services/api.dart';
 import '../widgets/app_drawer.dart';
 
@@ -21,6 +28,8 @@ class _ReportPageState extends State<ReportPage> {
   late List<dynamic> datedTransactions = ["Loading..."];
   double sumIncome = 0;
   double sumExpense = 0;
+  List<CategorizedTransactionAmount> cIncomeAmountChart = [];
+  List<CategorizedTransactionAmount> cExpenseAmountChart = [];
 
   @override
   void initState() {
@@ -31,8 +40,22 @@ class _ReportPageState extends State<ReportPage> {
     AppData.endDate = Jiffy(Jiffy(AppData.startDate).add(months: 1).dateTime)
         .subtract(days: 1)
         .dateTime;
+    initChartData();
     updateData();
     super.initState();
+  }
+
+  void initChartData() {
+    cIncomeAmountChart = [];
+    cExpenseAmountChart = [];
+    for (Category category in CategoryList.incomes) {
+      cIncomeAmountChart
+          .add(CategorizedTransactionAmount(category: category.name));
+    }
+    for (Category category in CategoryList.expenses) {
+      cExpenseAmountChart
+          .add(CategorizedTransactionAmount(category: category.name));
+    }
   }
 
   void updateData() async {
@@ -44,6 +67,33 @@ class _ReportPageState extends State<ReportPage> {
     for (DatedTransaction datedTransaction in datedTransactions) {
       sumIncome += datedTransaction.getTotalIncome();
       sumExpense += datedTransaction.getTotalExpense();
+      for (Transaction transaction in datedTransaction.transactions) {
+        if (transaction.amount > 0) {
+          int i = CategoryList.getIncomeIndex(transaction.category);
+          cIncomeAmountChart[i].addAmount(transaction.amount);
+        } else {
+          int i = CategoryList.getExpenseIndex(transaction.category);
+          cExpenseAmountChart[i].addAmount(transaction.amount);
+        }
+      }
+    }
+    List<CategorizedTransactionAmount> toRemove = [];
+    for (CategorizedTransactionAmount c in cIncomeAmountChart) {
+      if (c.amount == 0) {
+        toRemove.add(c);
+      }
+    }
+    for (CategorizedTransactionAmount t in toRemove) {
+      cIncomeAmountChart.remove(t);
+    }
+    toRemove = [];
+    for (CategorizedTransactionAmount c in cExpenseAmountChart) {
+      if (c.amount == 0) {
+        toRemove.add(c);
+      }
+    }
+    for (CategorizedTransactionAmount t in toRemove) {
+      cExpenseAmountChart.remove(t);
     }
     setState(() {});
   }
@@ -54,6 +104,16 @@ class _ReportPageState extends State<ReportPage> {
       appBar: AppBar(
         title: CustomAppBarContent(),
       ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        print("incomes");
+        for (CategorizedTransactionAmount c in cIncomeAmountChart) {
+          print("   $c");
+        }
+        print("expense");
+        for (CategorizedTransactionAmount c in cExpenseAmountChart) {
+          print("   $c");
+        }
+      }),
       drawer: const AppDrawer(
         pageIndex: 1,
       ),
@@ -76,6 +136,7 @@ class _ReportPageState extends State<ReportPage> {
                         dateTimeText =
                             DateFormat("MMMM yyyy").format(AppData.startDate);
                       });
+                      initChartData();
                       updateData();
                     },
                     icon: const Icon(Icons.chevron_left),
@@ -102,6 +163,7 @@ class _ReportPageState extends State<ReportPage> {
                         dateTimeText =
                             DateFormat("MMMM yyyy").format(AppData.startDate);
                       });
+                      initChartData();
                       updateData();
                     },
                     icon: const Icon(Icons.chevron_right),
@@ -144,6 +206,12 @@ class _ReportPageState extends State<ReportPage> {
                 ))
               ],
             ),
+          ),
+          Row(
+            children: [
+              Expanded(child: CategorizedChart(dataSource: cIncomeAmountChart, title: "Income")),
+              Expanded(child: CategorizedChart(dataSource: cExpenseAmountChart, title: "Expense"))
+            ],
           )
         ],
       ),

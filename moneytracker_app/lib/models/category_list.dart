@@ -25,6 +25,24 @@ class CategoryList {
     Category(icon: Icons.inventory, name: "Others"),
   ];
 
+  static int getIncomeIndex(String category) {
+    for (Category income in incomes) {
+      if (income.name == category) {
+        return incomes.indexOf(income);
+      }
+    }
+    return -1;
+  }
+
+  static int getExpenseIndex(String category) {
+    for (Category expense in expenses) {
+      if (expense.name == category) {
+        return expenses.indexOf(expense);
+      }
+    }
+    return -1;
+  }
+
   static IconData getIconExpense(String category) {
     int index = -1;
     index = expenses.indexWhere((element) {
