@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
+import 'package:moneytracker_app/pages/report_page.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../appdata.dart';
@@ -31,15 +32,31 @@ class AppDrawer extends StatelessWidget {
                   Navigator.pop(context);
                   return;
                 }
+                Navigator.pop(context);
                 Navigator.pushReplacement(
                     context,
                     PageTransition(
-                        child: Homepage(),
-                        type: PageTransitionType.rightToLeftWithFade,
-                        duration: const Duration(milliseconds: 300)));
+                        child: const Homepage(),
+                        type: PageTransitionType.fade,
+                        duration: const Duration(milliseconds: 100)));
               },
             ),
-            DrawerRow(iconData: Icons.book, text: "Reports", onTap: () {}),
+            DrawerRow(
+                iconData: Icons.book,
+                text: "Reports",
+                onTap: () {
+                  if (pageIndex == 1) {
+                    Navigator.pop(context);
+                    return;
+                  }
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                          child: const ReportPage(),
+                          type: PageTransitionType.fade,
+                          duration: const Duration(milliseconds: 100)));
+                }),
             DrawerRow(iconData: Icons.settings, text: "Settings", onTap: () {})
           ],
         ),

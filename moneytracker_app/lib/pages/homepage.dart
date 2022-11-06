@@ -59,7 +59,6 @@ class HomepageState extends State<Homepage> {
 
   @override
   void initState() {
-    super.initState();
     AppData.startDate = DateTime.now();
     AppData.startDate = DateTime.parse(
         "${AppData.startDate.year}-${AppData.startDate.month}-01");
@@ -68,6 +67,7 @@ class HomepageState extends State<Homepage> {
         .subtract(days: 1)
         .dateTime;
     updateData();
+    super.initState();
   }
 
   @override

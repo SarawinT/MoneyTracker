@@ -75,7 +75,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
             if (_selectedCategory == "Select category") {
               _feedback = "Please select category";
             } else if (_amountController.text.isEmpty ||
-                _amountController.text == '0') {
+                double.parse(_amountController.text) == 0) {
               _feedback = "Please enter amount";
             } else {
               _feedback = "";

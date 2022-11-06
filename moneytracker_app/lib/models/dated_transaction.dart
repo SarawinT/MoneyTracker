@@ -11,6 +11,26 @@ class DatedTransaction {
     }
   }
 
+  double getTotalIncome() {
+    double sum = 0;
+    for (Transaction transaction in transactions) {
+      if (transaction.amount > 0) {
+        sum += transaction.amount;
+      }
+    }
+    return sum;
+  }
+
+  double getTotalExpense() {
+    double sum = 0;
+    for (Transaction transaction in transactions) {
+      if (transaction.amount < 0) {
+        sum += transaction.amount;
+      }
+    }
+    return sum;
+  }
+
   void printCheck() {
     print(date);
     for (Transaction t in transactions) {
