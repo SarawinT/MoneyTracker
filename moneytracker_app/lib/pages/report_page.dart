@@ -9,9 +9,11 @@ import 'package:moneytracker_app/widgets/report_card.dart';
 import '../appdata.dart';
 import '../models/categorized_transaction_amount.dart';
 import '../models/category.dart';
+import '../models/dated_transaction_amount.dart';
 import '../models/transaction.dart';
 import '../services/api.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/date_chart.dart';
 
 class ReportPage extends StatefulWidget {
   const ReportPage({Key? key}) : super(key: key);
@@ -27,6 +29,8 @@ class _ReportPageState extends State<ReportPage> {
   double sumExpense = 0;
   List<CategorizedTransactionAmount> cIncomeAmountChart = [];
   List<CategorizedTransactionAmount> cExpenseAmountChart = [];
+  List<DatedTransactionAmount> dIncomeAmountChart = [];
+  List<DatedTransactionAmount> dExpenseAmountChart = [];
 
   @override
   void initState() {
@@ -39,6 +43,8 @@ class _ReportPageState extends State<ReportPage> {
   void initChartData() {
     cIncomeAmountChart = [];
     cExpenseAmountChart = [];
+    dIncomeAmountChart = [];
+    dExpenseAmountChart = [];
     for (Category category in CategoryList.incomes) {
       cIncomeAmountChart
           .add(CategorizedTransactionAmount(category: category.name));
@@ -58,15 +64,27 @@ class _ReportPageState extends State<ReportPage> {
     for (DatedTransaction datedTransaction in datedTransactions) {
       sumIncome += datedTransaction.getTotalIncome();
       sumExpense += datedTransaction.getTotalExpense();
+      double sumIncomeDate = 0;
+      double sumExpenseDate = 0;
       for (Transaction transaction in datedTransaction.transactions) {
         if (transaction.amount > 0) {
+          sumIncomeDate += transaction.amount;
           int i = CategoryList.getIncomeIndex(transaction.category);
           cIncomeAmountChart[i].addAmount(transaction.amount);
         } else {
+          sumExpenseDate += transaction.amount;
           int i = CategoryList.getExpenseIndex(transaction.category);
           cExpenseAmountChart[i].addAmount(transaction.amount);
         }
       }
+      dIncomeAmountChart.add(DatedTransactionAmount(
+          date: DateFormat("dd MMM")
+              .format(DateTime.parse(datedTransaction.date)),
+          amount: sumIncomeDate));
+      dExpenseAmountChart.add(DatedTransactionAmount(
+          date: DateFormat("dd MMM")
+              .format(DateTime.parse(datedTransaction.date)),
+          amount: sumExpenseDate));
     }
     List<CategorizedTransactionAmount> toRemove = [];
     for (CategorizedTransactionAmount c in cIncomeAmountChart) {
@@ -86,6 +104,8 @@ class _ReportPageState extends State<ReportPage> {
     for (CategorizedTransactionAmount t in toRemove) {
       cExpenseAmountChart.remove(t);
     }
+    dIncomeAmountChart = List.from(dIncomeAmountChart.reversed);
+    dExpenseAmountChart = List.from(dExpenseAmountChart.reversed);
     setState(() {});
   }
 
@@ -309,6 +329,18 @@ class _ReportPageState extends State<ReportPage> {
                     child: Row(
                       children: [
                         Expanded(
+                            child: DateChart(
+                          incomes: dIncomeAmountChart,
+                          expenses: dExpenseAmountChart,
+                        ))
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
                             child: CategorizedChart(
                                 dataSource: cIncomeAmountChart,
                                 title: "Income")),
@@ -318,7 +350,7 @@ class _ReportPageState extends State<ReportPage> {
                                 title: "Expense"))
                       ],
                     ),
-                  ),
+                  )
                 ],
               )
           ],

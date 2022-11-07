@@ -69,7 +69,7 @@ class TransactionCard extends StatelessWidget {
                     transaction.category,
                     style: GoogleFonts.kanit(fontSize: 18),
                   ),
-                  Text(
+                  if (transaction.note.isNotEmpty)Text(
                     transaction.note,
                     style: GoogleFonts.kanit(fontWeight: FontWeight.w300),
                   )
