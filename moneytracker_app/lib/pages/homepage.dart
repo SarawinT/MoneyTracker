@@ -59,13 +59,7 @@ class HomepageState extends State<Homepage> {
 
   @override
   void initState() {
-    AppData.startDate = DateTime.now();
-    AppData.startDate = DateTime.parse(
-        "${AppData.startDate.year}-${AppData.startDate.month}-01");
     dateTimeText = DateFormat("MMMM yyyy").format(AppData.startDate);
-    AppData.endDate = Jiffy(Jiffy(AppData.startDate).add(months: 1).dateTime)
-        .subtract(days: 1)
-        .dateTime;
     updateData();
     super.initState();
   }
@@ -156,8 +150,7 @@ class HomepageState extends State<Homepage> {
                         dateTimeText,
                         style: const TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF005E08)),
+                            fontWeight: FontWeight.w600,),
                       ),
                     ),
                     IconButton(

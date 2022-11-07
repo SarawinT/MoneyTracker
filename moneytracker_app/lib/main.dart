@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:moneytracker_app/appdata.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
 import 'package:moneytracker_app/pages/loading_page.dart';
@@ -40,6 +41,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     _loadUsername();
+    AppData.startDate = DateTime.now();
+    AppData.startDate = DateTime.parse(
+        "${AppData.startDate.year}-${AppData.startDate.month}-01");
+    AppData.endDate = Jiffy(Jiffy(AppData.startDate).add(months: 1).dateTime)
+        .subtract(days: 1)
+        .dateTime;
     super.initState();
   }
 

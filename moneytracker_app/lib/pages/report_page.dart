@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:moneytracker_app/models/category_list.dart';
@@ -7,8 +6,6 @@ import 'package:moneytracker_app/models/dated_transaction.dart';
 import 'package:moneytracker_app/widgets/categorized_chart.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/report_card.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-
 import '../appdata.dart';
 import '../models/categorized_transaction_amount.dart';
 import '../models/category.dart';
@@ -33,13 +30,7 @@ class _ReportPageState extends State<ReportPage> {
 
   @override
   void initState() {
-    AppData.startDate = DateTime.now();
-    AppData.startDate = DateTime.parse(
-        "${AppData.startDate.year}-${AppData.startDate.month}-01");
     dateTimeText = DateFormat("MMMM yyyy").format(AppData.startDate);
-    AppData.endDate = Jiffy(Jiffy(AppData.startDate).add(months: 1).dateTime)
-        .subtract(days: 1)
-        .dateTime;
     initChartData();
     updateData();
     super.initState();
@@ -104,116 +95,234 @@ class _ReportPageState extends State<ReportPage> {
       appBar: AppBar(
         title: CustomAppBarContent(),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        print("incomes");
-        for (CategorizedTransactionAmount c in cIncomeAmountChart) {
-          print("   $c");
-        }
-        print("expense");
-        for (CategorizedTransactionAmount c in cExpenseAmountChart) {
-          print("   $c");
-        }
-      }),
       drawer: const AppDrawer(
         pageIndex: 1,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      AppData.startDate =
-                          Jiffy(AppData.startDate).subtract(months: 1).dateTime;
-                      AppData.endDate = Jiffy(
-                              Jiffy(AppData.startDate).add(months: 1).dateTime)
-                          .subtract(days: 1)
-                          .dateTime;
-                      setState(() {
-                        dateTimeText =
-                            DateFormat("MMMM yyyy").format(AppData.startDate);
-                      });
-                      initChartData();
-                      updateData();
-                    },
-                    icon: const Icon(Icons.chevron_left),
-                    splashRadius: 22),
-                SizedBox(
-                  width: 156,
-                  child: Text(
-                    dateTimeText,
-                    style: const TextStyle(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        AppData.startDate = Jiffy(AppData.startDate)
+                            .subtract(months: 1)
+                            .dateTime;
+                        AppData.endDate = Jiffy(Jiffy(AppData.startDate)
+                                .add(months: 1)
+                                .dateTime)
+                            .subtract(days: 1)
+                            .dateTime;
+                        setState(() {
+                          dateTimeText =
+                              DateFormat("MMMM yyyy").format(AppData.startDate);
+                        });
+                        initChartData();
+                        updateData();
+                      },
+                      icon: const Icon(Icons.chevron_left),
+                      splashRadius: 22),
+                  SizedBox(
+                    width: 156,
+                    child: Text(
+                      dateTimeText,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF005E08)),
+                      ),
+                    ),
                   ),
-                ),
-                IconButton(
-                    onPressed: () {
-                      AppData.startDate =
-                          Jiffy(AppData.startDate).add(months: 1).dateTime;
-                      AppData.endDate = Jiffy(
-                              Jiffy(AppData.startDate).add(months: 1).dateTime)
-                          .subtract(days: 1)
-                          .dateTime;
-                      setState(() {
-                        dateTimeText =
-                            DateFormat("MMMM yyyy").format(AppData.startDate);
-                      });
-                      initChartData();
-                      updateData();
-                    },
-                    icon: const Icon(Icons.chevron_right),
-                    splashRadius: 22),
-              ],
+                  IconButton(
+                      onPressed: () {
+                        AppData.startDate =
+                            Jiffy(AppData.startDate).add(months: 1).dateTime;
+                        AppData.endDate = Jiffy(Jiffy(AppData.startDate)
+                                .add(months: 1)
+                                .dateTime)
+                            .subtract(days: 1)
+                            .dateTime;
+                        setState(() {
+                          dateTimeText =
+                              DateFormat("MMMM yyyy").format(AppData.startDate);
+                        });
+                        initChartData();
+                        updateData();
+                      },
+                      icon: const Icon(Icons.chevron_right),
+                      splashRadius: 22),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "Report from ",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  "${DateFormat("dd MMM yyyy").format(AppData.startDate)} "
-                  "- ${DateFormat("dd MMM yyyy").format(AppData.endDate)}",
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w600),
-                ),
-              ],
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Report from ",
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    "${DateFormat("dd MMM yyyy").format(AppData.startDate)} "
+                    "- ${DateFormat("dd MMM yyyy").format(AppData.endDate)}",
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                    child: ReportCard(
-                  isIncome: true,
-                  amount: sumIncome,
-                )),
-                Expanded(
-                    child: ReportCard(
-                  isIncome: false,
-                  amount: sumExpense,
-                ))
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              Expanded(child: CategorizedChart(dataSource: cIncomeAmountChart, title: "Income")),
-              Expanded(child: CategorizedChart(dataSource: cExpenseAmountChart, title: "Expense"))
-            ],
-          )
-        ],
+            if (datedTransactions.isEmpty)
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    SizedBox(
+                      height: 128,
+                    ),
+                    Icon(
+                      Icons.collections_bookmark,
+                      size: 128,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      "No transaction from this month",
+                      style: TextStyle(color: Colors.grey, fontSize: 24),
+                    )
+                  ],
+                ),
+              ),
+            if (datedTransactions.isNotEmpty)
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: ReportCard(
+                          title: "NET INCOME",
+                          amount: (sumIncome + sumExpense),
+                        ))
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: ReportCard(
+                          title: "INCOME",
+                          amount: sumIncome,
+                          onTap: () {
+                            if (cIncomeAmountChart.isEmpty) return;
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width - 128,
+                                  height:
+                                      MediaQuery.of(context).size.height - 128,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              splashRadius: 16,
+                                              icon: const Icon(Icons.close))
+                                        ],
+                                      ),
+                                      Expanded(
+                                        child: Center(
+                                            child: CategorizedChart(
+                                                dataSource: cIncomeAmountChart,
+                                                title: "Income")),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )),
+                        Expanded(
+                            child: ReportCard(
+                          title: "EXPENSE",
+                          amount: sumExpense,
+                          onTap: () {
+                            if (cExpenseAmountChart.isEmpty) return;
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width - 128,
+                                  height:
+                                      MediaQuery.of(context).size.height - 128,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              splashRadius: 16,
+                                              icon: const Icon(Icons.close))
+                                        ],
+                                      ),
+                                      Expanded(
+                                        child: Center(
+                                            child: CategorizedChart(
+                                                dataSource: cExpenseAmountChart,
+                                                title: "Expense")),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ))
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: CategorizedChart(
+                                dataSource: cIncomeAmountChart,
+                                title: "Income")),
+                        Expanded(
+                            child: CategorizedChart(
+                                dataSource: cExpenseAmountChart,
+                                title: "Expense"))
+                      ],
+                    ),
+                  ),
+                ],
+              )
+          ],
+        ),
       ),
     );
   }

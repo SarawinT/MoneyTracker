@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
 import 'package:moneytracker_app/widgets/info_dialog.dart';
+import '../appdata.dart';
 import '../services/api.dart';
 
 class CustomAppBarContent extends StatelessWidget {
-  final NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   late double? balance;
   final TextEditingController _amountController = TextEditingController();
 
@@ -110,7 +109,7 @@ class CustomAppBarContent extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     left: 24, right: 24, top: 2, bottom: 2),
                 child: Text(
-                  "฿ ${moneyFormat.format(balance)}",
+                  "฿ ${AppData.moneyFormat.format(balance)}",
                   style: GoogleFonts.kanit(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
