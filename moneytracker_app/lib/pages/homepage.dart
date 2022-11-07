@@ -66,12 +66,44 @@ class HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget pageBody;
+    return Scaffold(
+      appBar: AppBar(
+          title: CustomAppBarContent(
+        balance: balance,
+      )),
+      drawer: const AppDrawer(
+        pageIndex: 0,
+      ),
+      floatingActionButton: (listStatus == TransactionListStatus.normal ||
+              listStatus == TransactionListStatus.empty)
+          ? FloatingActionButton(
+              onPressed: () async {
+                var createResponse = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CreateTransaction()),
+                );
+                if (createResponse == null) {
+                  return;
+                }
+                if (createResponse) {
+                  updateData();
+                  showSnackBar('Transaction created');
+                }
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
+      body: _buildPageBody(),
+    );
+  }
+
+  Widget _buildPageBody() {
     _setListStatus();
     switch (listStatus) {
       case TransactionListStatus.loading:
         {
-          pageBody = Center(
+          return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -89,11 +121,9 @@ class HomepageState extends State<Homepage> {
             ),
           );
         }
-        setState(() {});
-        break;
       case TransactionListStatus.error:
         {
-          pageBody = Center(
+          return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -115,11 +145,9 @@ class HomepageState extends State<Homepage> {
             ),
           );
         }
-        setState(() {});
-        break;
       default:
         {
-          pageBody = Column(
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
@@ -149,8 +177,9 @@ class HomepageState extends State<Homepage> {
                       child: Text(
                         dateTimeText,
                         style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     IconButton(
@@ -236,39 +265,6 @@ class HomepageState extends State<Homepage> {
             ],
           );
         }
-        setState(() {});
-        break;
     }
-
-    return Scaffold(
-      appBar: AppBar(
-          title: CustomAppBarContent(
-        balance: balance,
-      )),
-      drawer: const AppDrawer(
-        pageIndex: 0,
-      ),
-      floatingActionButton: (listStatus == TransactionListStatus.normal ||
-              listStatus == TransactionListStatus.empty)
-          ? FloatingActionButton(
-              onPressed: () async {
-                var createResponse = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const CreateTransaction()),
-                );
-                if (createResponse == null) {
-                  return;
-                }
-                if (createResponse) {
-                  updateData();
-                  showSnackBar('Transaction created');
-                }
-              },
-              child: const Icon(Icons.add),
-            )
-          : null,
-      body: pageBody,
-    );
   }
 }

@@ -8,5 +8,6 @@ class AppData {
   static MaterialColor primaryColor = Colors.green;
   static MaterialColor secondaryColor = Colors.lightGreen;
   static NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
+  static String currency = "฿";
 
 }

@@ -5,6 +5,7 @@ import 'package:moneytracker_app/models/transaction.dart';
 import 'package:moneytracker_app/pages/edit_transaction.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/transaction_card.dart';
+import '../appdata.dart';
 import '../services/api.dart';
 
 class TransactionDetails extends StatefulWidget {
@@ -173,12 +174,12 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   ),
                   widget.transaction.amount > 0
                       ? Text(
-                          "฿ ${moneyFormat.format(widget.transaction.amount)}",
+                          "${AppData.currency} ${moneyFormat.format(widget.transaction.amount)}",
                           style: GoogleFonts.kanit(
                               fontSize: 20, color: Colors.blue),
                         )
                       : Text(
-                          "- ฿ ${moneyFormat.format(widget.transaction.amount * -1)}",
+                          "- ${AppData.currency} ${moneyFormat.format(widget.transaction.amount * -1)}",
                           style: GoogleFonts.kanit(
                               fontSize: 20, color: Colors.red),
                         )

@@ -4,9 +4,9 @@ import 'package:moneytracker_app/appdata.dart';
 class ReportCard extends StatelessWidget {
   final double amount;
   final String title;
-  Function? onTap;
+  final Function? onTap;
 
-  ReportCard({Key? key, required this.amount, required this.title, this.onTap})
+  const ReportCard({Key? key, required this.amount, required this.title, this.onTap})
       : super(key: key);
 
   @override
@@ -24,14 +24,14 @@ class ReportCard extends StatelessWidget {
               Text(title),
               amount > 0
                   ? Text(
-                      "฿ ${AppData.moneyFormat.format(amount)}",
+                      "${AppData.currency} ${AppData.moneyFormat.format(amount)}",
                       style: const TextStyle(
                           fontSize: 36,
                           fontWeight: FontWeight.w600,
                           color: Colors.blue),
                     )
                   : Text(
-                      "฿ ${AppData.moneyFormat.format(amount)}",
+                      "${AppData.currency} ${AppData.moneyFormat.format(amount)}",
                       style: const TextStyle(
                           fontSize: 36,
                           fontWeight: FontWeight.w600,

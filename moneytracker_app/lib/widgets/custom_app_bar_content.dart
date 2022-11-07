@@ -109,7 +109,7 @@ class CustomAppBarContent extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     left: 24, right: 24, top: 2, bottom: 2),
                 child: Text(
-                  "฿ ${AppData.moneyFormat.format(balance)}",
+                  "${AppData.currency} ${AppData.moneyFormat.format(balance)}",
                   style: GoogleFonts.kanit(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,

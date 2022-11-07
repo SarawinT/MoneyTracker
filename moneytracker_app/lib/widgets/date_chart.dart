@@ -17,6 +17,7 @@ class _DateChartState extends State<DateChart> {
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
+      enableSideBySideSeriesPlacement: false,
       primaryXAxis: CategoryAxis(labelStyle: GoogleFonts.kanit()),
       primaryYAxis: NumericAxis(labelStyle: GoogleFonts.kanit()),
       series: <ChartSeries<DatedTransactionAmount, String>>[
@@ -24,12 +25,20 @@ class _DateChartState extends State<DateChart> {
             color: Colors.blueAccent,
             dataSource: widget.incomes,
             xValueMapper: (DatedTransactionAmount data, _) => data.date,
-            yValueMapper: (DatedTransactionAmount data, _) => data.amount),
+            yValueMapper: (DatedTransactionAmount data, _) => data.amount,
+            dataLabelSettings: DataLabelSettings(
+                isVisible: true,
+                textStyle: GoogleFonts.kanit(color: Colors.blueAccent),
+                showZeroValue: false)),
         ColumnSeries<DatedTransactionAmount, String>(
             color: Colors.redAccent,
             dataSource: widget.expenses,
             xValueMapper: (DatedTransactionAmount data, _) => data.date,
-            yValueMapper: (DatedTransactionAmount data, _) => data.amount)
+            yValueMapper: (DatedTransactionAmount data, _) => data.amount,
+            dataLabelSettings: DataLabelSettings(
+                isVisible: true,
+                textStyle: GoogleFonts.kanit(color: Colors.redAccent),
+                showZeroValue: false))
       ],
     );
   }

@@ -55,7 +55,7 @@ class TransactionCard extends StatelessWidget {
           }
         },
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 8, right: 8, top: 6, bottom: 6),
           child: Row(
             children: [
               const SizedBox(width: 24),
@@ -69,10 +69,11 @@ class TransactionCard extends StatelessWidget {
                     transaction.category,
                     style: GoogleFonts.kanit(fontSize: 18),
                   ),
-                  if (transaction.note.isNotEmpty)Text(
-                    transaction.note,
-                    style: GoogleFonts.kanit(fontWeight: FontWeight.w300),
-                  )
+                  if (transaction.note.isNotEmpty)
+                    Text(
+                      transaction.note,
+                      style: GoogleFonts.kanit(fontWeight: FontWeight.w300),
+                    )
                 ],
               )),
               Text(

@@ -13,20 +13,25 @@ class CategorizedChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return (dataSource.isNotEmpty) ? SfCircularChart(
-        title: ChartTitle(
-            text: title,
-            textStyle: GoogleFonts.kanit(fontWeight: FontWeight.w600)),
-        legend: Legend(isVisible: true, textStyle: GoogleFonts.kanit()),
-        series: <CircularSeries>[
-          DoughnutSeries<CategorizedTransactionAmount, String>(
-              dataSource: dataSource,
-              xValueMapper: (CategorizedTransactionAmount data, _) =>
-                  data.category,
-              yValueMapper: (CategorizedTransactionAmount data, _) =>
-                  data.amount,
-              dataLabelSettings: DataLabelSettings(
-                  isVisible: true, textStyle: GoogleFonts.kanit()))
-        ]) : Container();
+    return (dataSource.isNotEmpty)
+        ? SfCircularChart(
+            title: ChartTitle(
+                text: title,
+                textStyle: GoogleFonts.kanit(fontWeight: FontWeight.w600)),
+            legend: Legend(
+                isVisible: true,
+                textStyle: GoogleFonts.kanit(),
+                overflowMode: LegendItemOverflowMode.wrap),
+            series: <CircularSeries>[
+                DoughnutSeries<CategorizedTransactionAmount, String>(
+                    dataSource: dataSource,
+                    xValueMapper: (CategorizedTransactionAmount data, _) =>
+                        data.category,
+                    yValueMapper: (CategorizedTransactionAmount data, _) =>
+                        data.amount,
+                    dataLabelSettings: DataLabelSettings(
+                        isVisible: true, textStyle: GoogleFonts.kanit()))
+              ])
+        : Container();
   }
 }

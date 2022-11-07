@@ -20,7 +20,7 @@ class DateCard extends Card {
     return Card(
       color: AppData.secondaryColor,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 9, right: 8, top: 4, bottom: 4),
         child: Row(
           children: [
             const SizedBox(
