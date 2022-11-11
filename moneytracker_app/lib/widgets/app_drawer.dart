@@ -57,7 +57,7 @@ class AppDrawer extends StatelessWidget {
                           type: PageTransitionType.fade,
                           duration: const Duration(milliseconds: 100)));
                 }),
-            DrawerRow(iconData: Icons.settings, text: "Settings", onTap: () {})
+            // DrawerRow(iconData: Icons.settings, text: "Settings", onTap: () {})
           ],
         ),
       ),

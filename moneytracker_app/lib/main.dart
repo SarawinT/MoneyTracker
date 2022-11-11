@@ -24,12 +24,8 @@ class _MyAppState extends State<MyApp> {
   void _loadUsername() async {
     final String response =
         await rootBundle.loadString('assets/config/config.json');
-
     setState(() {});
-
     AppData.username = jsonDecode(response)['Username'];
-    // username = jsonDecode(response)['Username'];
-
     if (AppData.username.isNotEmpty) {
       await Future.delayed(const Duration(milliseconds: 1800));
       setState(() {

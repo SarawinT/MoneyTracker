@@ -28,7 +28,7 @@ class _DateChartState extends State<DateChart> {
             yValueMapper: (DatedTransactionAmount data, _) => data.amount,
             dataLabelSettings: DataLabelSettings(
                 isVisible: true,
-                textStyle: GoogleFonts.kanit(color: Colors.blueAccent),
+                textStyle: GoogleFonts.kanit(color: const Color(0xFF0037AB)),
                 showZeroValue: false)),
         ColumnSeries<DatedTransactionAmount, String>(
             color: Colors.redAccent,
@@ -37,7 +37,7 @@ class _DateChartState extends State<DateChart> {
             yValueMapper: (DatedTransactionAmount data, _) => data.amount,
             dataLabelSettings: DataLabelSettings(
                 isVisible: true,
-                textStyle: GoogleFonts.kanit(color: Colors.redAccent),
+                textStyle: GoogleFonts.kanit(color: const Color(0xFFAB0000)),
                 showZeroValue: false))
       ],
     );

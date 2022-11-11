@@ -30,7 +30,9 @@ class HomepageState extends State<Homepage> {
         DateFormat("yyyy-MM-dd").format(AppData.startDate),
         DateFormat("yyyy-MM-dd").format(AppData.endDate));
     balance = await API.getBalance();
-    setState(() {});
+    setState(() {
+      _setListStatus();
+    });
     return;
   }
 
@@ -99,7 +101,6 @@ class HomepageState extends State<Homepage> {
   }
 
   Widget _buildPageBody() {
-    _setListStatus();
     switch (listStatus) {
       case TransactionListStatus.loading:
         {

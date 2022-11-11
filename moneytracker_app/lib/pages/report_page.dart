@@ -24,7 +24,7 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   late String dateTimeText = "";
-  late List<dynamic> datedTransactions = ["Loading..."];
+  late List<dynamic> datedTransactions = [];
   double sumIncome = 0;
   double sumExpense = 0;
   List<CategorizedTransactionAmount> cIncomeAmountChart = [];
@@ -226,10 +226,33 @@ class _ReportPageState extends State<ReportPage> {
                     child: Row(
                       children: [
                         Expanded(
-                            child: ReportCard(
-                          title: "NET INCOME",
-                          amount: (sumIncome + sumExpense),
-                        ))
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("NET INCOME"),
+                                  (sumIncome + sumExpense) >= 0
+                                      ? Text(
+                                          "${AppData.currency} ${AppData.moneyFormat.format(sumIncome + sumExpense)}",
+                                          style: const TextStyle(
+                                              fontSize: 36,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.blue),
+                                        )
+                                      : Text(
+                                          "${AppData.currency} ${AppData.moneyFormat.format(sumIncome + sumExpense)}",
+                                          style: const TextStyle(
+                                              fontSize: 36,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.red),
+                                        )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -239,6 +262,7 @@ class _ReportPageState extends State<ReportPage> {
                       children: [
                         Expanded(
                             child: ReportCard(
+                          isIncome: true,
                           title: "INCOME",
                           amount: sumIncome,
                           onTap: () {
@@ -281,6 +305,7 @@ class _ReportPageState extends State<ReportPage> {
                         )),
                         Expanded(
                             child: ReportCard(
+                          isIncome: false,
                           title: "EXPENSE",
                           amount: sumExpense,
                           onTap: () {
