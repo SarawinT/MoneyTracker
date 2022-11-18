@@ -19,6 +19,16 @@ func NewTransactionHandler(transactionSrv service.TransactionService) transactio
 
 func (h transactionHandler) GetAll(c *fiber.Ctx) error {
 	username := c.Params("username")
+	transactions, err := h.transactionSrv.GetAll(username)
+	if err != nil {
+		logs.Error(err)
+		return err
+	}
+	return c.JSON(transactions)
+}
+
+func (h transactionHandler) GetAllDated(c *fiber.Ctx) error {
+	username := c.Params("username")
 	transactions, err := h.transactionSrv.GetAllDated(username)
 	if err != nil {
 		logs.Error(err)
@@ -43,6 +53,18 @@ func (h transactionHandler) GetByID(c *fiber.Ctx) error {
 }
 
 func (h transactionHandler) GetByDate(c *fiber.Ctx) error {
+	username := c.Params("username")
+	from := c.Query("from")
+	to := c.Query("to")
+	transactions, err := h.transactionSrv.GetByDate(username, from, to)
+	if err != nil {
+		logs.Error(err)
+		return err
+	}
+	return c.JSON(transactions)
+}
+
+func (h transactionHandler) GetByDateDated(c *fiber.Ctx) error {
 	username := c.Params("username")
 	from := c.Query("from")
 	to := c.Query("to")

@@ -1,0 +1,17 @@
+version: '3.3'
+services:
+  moneytracker-api:
+    container_name: app
+    image: moneytracker-go
+    ports:
+      - '8000:8000'
+  db:
+    container_name: mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'prior'
+      MYSQL_PASSWORD: 'nagato00'
+      MYSQL_ROOT_PASSWORD: 'nagato00'
+    ports:
+      - '3306:3306'
