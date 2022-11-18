@@ -140,11 +140,11 @@ func (h transactionHandler) Delete(c *fiber.Ctx) error {
 		return err
 	}
 
-	weather, err := h.transactionSrv.Delete(username, id)
+	transaction, err := h.transactionSrv.Delete(username, id)
 	if err != nil {
 		logs.Error(err)
 		return err
 	}
 
-	return c.JSON(weather)
+	return c.JSON(transaction)
 }
