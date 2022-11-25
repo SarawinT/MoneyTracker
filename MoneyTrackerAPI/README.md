@@ -7,7 +7,6 @@
 - Use [**Viper**](https://github.com/spf13/viper) for configuration
 
 ## Available Routes
----
 **Transaction Table**
 - **GET** Request
   - */transaction/%username%/* - Get all transaction from username with dated format
