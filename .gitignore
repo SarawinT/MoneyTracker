@@ -12,3 +12,4 @@ moneytracker_app/.idea/*
 .packages
 .pub-cache/
 .pub/
+.vscode
