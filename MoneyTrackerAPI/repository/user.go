@@ -5,6 +5,10 @@ type User struct {
 	Balance  float32 `db:"Balance"`
 }
 
+func (u User) TableName() string {
+	return "usertbl"
+}
+
 type UserRepository interface {
 	GetByUsername(username string) (*User, error)
 	Create(User) (*User, error)

@@ -9,21 +9,24 @@ import (
 	"strings"
 	"time"
 
+	// "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
+	gormMysql "gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func main() {
 	initConfig()
-	db := initDatabase()
+	db := initDatabaseGORM()
 
-	transactionRepositoryDB := repository.NewTransactionRepositoryDB(db)
+	transactionRepositoryDB := repository.NewTransactionRepositoryGORM(db)
 	transactionService := service.NewTransactionService(transactionRepositoryDB)
 	transactionHandler := handler.NewTransactionHandler(transactionService)
 
-	userRepository := repository.NewUserRepositoryDB(db)
+	userRepository := repository.NewUserRepositoryGORM(db)
 	userService := service.NewUserService(userRepository)
 	userHandler := handler.NewUserHandler(userService)
 
@@ -82,6 +85,24 @@ func initDatabase() *sqlx.DB {
 	db.SetConnMaxLifetime(3 * time.Minute)
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(10)
+
+	return db
+}
+
+func initDatabaseGORM() *gorm.DB {
+	dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=true",
+		viper.GetString("db.username"),
+		viper.GetString("db.password"),
+		viper.GetString("db.host"),
+		viper.GetInt("db.port"),
+		viper.GetString("db.database"),
+	)
+
+	db, err := gorm.Open(gormMysql.Open(dsn))
+
+	if err != nil {
+		panic(err)
+	}
 
 	return db
 }

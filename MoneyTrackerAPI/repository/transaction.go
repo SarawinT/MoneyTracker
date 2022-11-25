@@ -9,6 +9,10 @@ type Transaction struct {
 	Username string  `db:"Username"`
 }
 
+func (t Transaction) TableName() string {
+	return "transactiontbl"
+}
+
 type TransactionRepository interface {
 	GetAll(username string) ([]Transaction, error)
 	GetByID(username string, id int) (*Transaction, error)
