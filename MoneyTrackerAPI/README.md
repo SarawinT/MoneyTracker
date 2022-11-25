@@ -23,11 +23,11 @@
 - **GET** Request
   - */user/%username%* - Get a user from usernamefrom 
 - **POST** Request
-  - */user - Create a user by JSON formatted request body
+  - */user* - Create a user by JSON formatted request body
 - **PUT** Request
   - */user* - Update a user data by JSON formatted request body
 - **DELETE** Request
-  - */user/%username% - Delete a user from username
+  - */user/%username%* - Delete a user from username
 
   
 
