@@ -10,6 +10,8 @@
 
 ## To do
 - Independent mobile app that saves data locally in user device
-- App setting which contains dark mode, color scheme, currency
-- Addable / Removable user category
+- Able to add / remove custom user category
+- Dark mode
+- Custom color scheme
+- Custom currency
 - Custom date range report
