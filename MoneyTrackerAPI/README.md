@@ -7,7 +7,6 @@
 - Use [**Viper**](https://github.com/spf13/viper) for configuration
 
 ## Available Routes
----
 **Transaction Table**
 - **GET** Request
   - */transaction/%username%/* - Get all transaction from username with dated format
@@ -24,11 +23,11 @@
 - **GET** Request
   - */user/%username%* - Get a user from usernamefrom 
 - **POST** Request
-  - */user - Create a user by JSON formatted request body
+  - */user* - Create a user by JSON formatted request body
 - **PUT** Request
   - */user* - Update a user data by JSON formatted request body
 - **DELETE** Request
-  - */user/%username% - Delete a user from username
+  - */user/%username%* - Delete a user from username
 
   
 
