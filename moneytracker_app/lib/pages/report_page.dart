@@ -70,10 +70,12 @@ class _ReportPageState extends State<ReportPage> {
         if (transaction.amount > 0) {
           sumIncomeDate += transaction.amount;
           int i = CategoryList.getIncomeIndex(transaction.category);
+          print(i);
           cIncomeAmountChart[i].addAmount(transaction.amount);
         } else {
           sumExpenseDate += transaction.amount;
           int i = CategoryList.getExpenseIndex(transaction.category);
+          print(i);
           cExpenseAmountChart[i].addAmount(transaction.amount);
         }
       }

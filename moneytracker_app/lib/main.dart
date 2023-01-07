@@ -38,8 +38,13 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     _loadUsername();
     AppData.startDate = DateTime.now();
-    AppData.startDate = DateTime.parse(
-        "${AppData.startDate.year}-${AppData.startDate.month}-01");
+    if (AppData.startDate.month < 10) {
+      AppData.startDate = DateTime.parse(
+          "${AppData.startDate.year}-0${AppData.startDate.month}-01");
+    } else {
+      AppData.startDate = DateTime.parse(
+          "${AppData.startDate.year}-${AppData.startDate.month}-01");
+    }
     AppData.endDate = Jiffy(Jiffy(AppData.startDate).add(months: 1).dateTime)
         .subtract(days: 1)
         .dateTime;
