@@ -2,7 +2,7 @@
 
 517324 MOBILE APPLICATION DEVELOPMENT Flutter Project
 
-<img src="https://github.com/SarawinT/MoneyTracker/blob/master/moneytracker_app/app_demo.gif" height="100"/>
+<img src="https://github.com/SarawinT/MoneyTracker/blob/master/moneytracker_app/app_demo.gif" height="500"/>
 
 ## Features 
 - Create / Edit transaction choosing from categorized list of expenses and incomes. 
