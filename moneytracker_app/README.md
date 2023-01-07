@@ -2,6 +2,8 @@
 
 517324 MOBILE APPLICATION DEVELOPMENT Flutter Project
 
+![](https://github.com/SarawinT/MoneyTracker/blob/master/moneytracker_app/app_demo.gif)
+
 ## Features 
 - Create / Edit transaction choosing from categorized list of expenses and incomes. 
 - View monthly report as categorized pie chart or dated bar chart.
