@@ -9,6 +9,7 @@
 - View monthly report as categorized pie chart or dated bar chart.
 
 ## To do
+- Undo action after deleted transaction
 - Independent mobile app that saves data locally in user device
 - Able to add / remove custom user category
 - Dark mode
