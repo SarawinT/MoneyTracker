@@ -5,6 +5,7 @@ import 'package:moneytracker_app/pages/homepage.dart';
 import 'package:moneytracker_app/widgets/info_dialog.dart';
 import '../appdata.dart';
 import '../services/api.dart';
+import '../services/firestore.dart';
 
 class CustomAppBarContent extends StatelessWidget {
   late double? balance;
@@ -71,16 +72,20 @@ class CustomAppBarContent extends StatelessWidget {
                               balance =
                                   double.tryParse(_amountController.text)!;
 
-                              var response = await API.updateUserBalance(
-                                  balance: balance!);
+                              var response =
+                                  await FireStore.setBalance(balance!);
 
-                              if (response.statusCode == 200) {
-                                Navigator.pop(context);
-                                homepage?.updateData();
-                                homepage?.showSnackBar("Balance updated");
-                              } else {
-                                return;
-                              }
+                              Navigator.pop(context);
+                              homepage?.updateData();
+                              homepage?.showSnackBar("Balance updated");
+
+                              // if (response.statusCode == 200) {
+                              //   Navigator.pop(context);
+                              //   homepage?.updateData();
+                              //   homepage?.showSnackBar("Balance updated");
+                              // } else {
+                              //   return;
+                              // }
                             },
                             child: const Text("OK"))
                       ],

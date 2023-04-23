@@ -9,6 +9,7 @@ import 'package:moneytracker_app/widgets/transaction_card.dart';
 import '../appdata.dart';
 import '../models/transaction.dart';
 import '../services/api.dart';
+import '../services/firestore.dart';
 
 class EditTransaction extends StatefulWidget {
   final AppTransaction transaction;
@@ -96,13 +97,14 @@ class _EditTransactionState extends State<EditTransaction> {
           });
           if (inputCheck) {
             EditDeleteStatus status = EditDeleteStatus.editSuccess;
-            status = await API.editTransaction(
+            status = await FireStore.editTransaction(
                 id: widget.transaction.id,
                 isExpense: _isExpense,
                 amount: double.parse(_amountController.text),
                 category: _selectedCategory,
                 selectedDate: _selectedDate,
-                note: _noteController.text);
+                note: _noteController.text,
+                oldAmount: widget.transaction.amount);
             if (status == EditDeleteStatus.editSuccess) {
               Navigator.pop(context, status);
             } else {

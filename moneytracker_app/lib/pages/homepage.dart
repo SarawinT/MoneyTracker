@@ -67,7 +67,6 @@ class HomepageState extends State<Homepage> {
     //     category: "Others",
     //     selectedDate: DateTime.parse("2023-04-22"),
     //     note: "LUL");
-    FireStore.getTransactionsFromDateRange(AppData.startDate, AppData.endDate);
     dateTimeText = DateFormat("MMMM yyyy").format(AppData.startDate);
     updateData();
     super.initState();

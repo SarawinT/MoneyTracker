@@ -45,7 +45,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
 
   void _updateTransaction() async {
     AppTransaction toUpdate =
-        await API.getTransactionByID(id: widget.transaction.id);
+        await FireStore.getTransactionByID(id: widget.transaction.id);
     widget.transaction.category = toUpdate.category;
     widget.transaction.amount = toUpdate.amount;
     widget.transaction.date = toUpdate.date;

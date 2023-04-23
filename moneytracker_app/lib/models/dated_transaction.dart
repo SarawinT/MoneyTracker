@@ -11,6 +11,11 @@ class DatedTransaction {
     }
   }
 
+  void addTransaction(AppTransaction t) {
+    transactions.add(t);
+    sum += t.amount;
+  }
+
   double getTotalIncome() {
     double sum = 0;
     for (AppTransaction transaction in transactions) {
@@ -46,10 +51,6 @@ class DatedTransaction {
     for (AppTransaction t in transactions) {
       t.printCheck();
     }
-  }
-
-  void addTransaction(AppTransaction t) {
-    transactions.add(t);
   }
 
 

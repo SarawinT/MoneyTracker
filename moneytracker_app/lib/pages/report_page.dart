@@ -12,6 +12,7 @@ import '../models/category.dart';
 import '../models/dated_transaction_amount.dart';
 import '../models/transaction.dart';
 import '../services/api.dart';
+import '../services/firestore.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/date_chart.dart';
 
@@ -58,9 +59,9 @@ class _ReportPageState extends State<ReportPage> {
   void updateData() async {
     sumIncome = 0;
     sumExpense = 0;
-    datedTransactions = await API.getTransactionsFromDateRange(
-        DateFormat("yyyy-MM-dd").format(AppData.startDate),
-        DateFormat("yyyy-MM-dd").format(AppData.endDate));
+    datedTransactions = await FireStore.getTransactionsFromDateRange(
+        AppData.startDate,
+        AppData.endDate);
     for (DatedTransaction datedTransaction in datedTransactions) {
       sumIncome += datedTransaction.getTotalIncome();
       sumExpense += datedTransaction.getTotalExpense();

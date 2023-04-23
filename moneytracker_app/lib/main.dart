@@ -68,7 +68,8 @@ class _MyAppState extends State<MyApp> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return LoadingPage();
               } else if (snapshot.hasData) {
-                AppData.username = FirebaseAuth.instance.currentUser!.uid;
+                AppData.userID = FirebaseAuth.instance.currentUser!.uid;
+                AppData.userDisplayName = FirebaseAuth.instance.currentUser!.displayName!;
                 FireStore.createUser();
                 return Homepage();
               } else {

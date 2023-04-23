@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AppData {
-  static String username = "";
+  static String userID = "";
+  static String userDisplayName = "";
   static DateTime startDate = DateTime.now();
   static DateTime endDate = DateTime.now();
   static MaterialColor primaryColor = Colors.green;

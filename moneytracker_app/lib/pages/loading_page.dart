@@ -28,13 +28,13 @@ class LoadingPage extends StatelessWidget {
           const SizedBox(
             height: 48,
           ),
-          if (AppData.username.isEmpty)
+          if (AppData.userID.isEmpty)
             const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
-          if (AppData.username.isNotEmpty)
+          if (AppData.userID.isNotEmpty)
             Text(
-              "Welcome ${AppData.username} !",
+              "Welcome ${AppData.userID} !",
               style: GoogleFonts.kanit(
                   decoration: TextDecoration.none,
                   color: Colors.white,

@@ -88,7 +88,7 @@ class DrawerProfile extends StatelessWidget {
           ),
         ),
         Text(
-          AppData.username,
+          AppData.userDisplayName,
           style: const TextStyle(fontSize: 24),
         ),
         const SizedBox(

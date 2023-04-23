@@ -30,7 +30,7 @@ class GoogleSigninProvider extends ChangeNotifier {
 
   Future initData() async {
 
-    AppData.username = FirebaseAuth.instance.currentUser!.uid;
+    AppData.userID = FirebaseAuth.instance.currentUser!.uid;
 
   }
 }

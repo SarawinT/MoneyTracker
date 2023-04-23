@@ -11,7 +11,7 @@ class API {
 
   static Future<List> getTransactions() async {
     var response =
-        await http.get(Uri.http(baseUrl, "/transaction/${AppData.username}"));
+        await http.get(Uri.http(baseUrl, "/transaction/${AppData.userID}"));
     if (response.statusCode != 200) {
       return [null];
     }
@@ -42,13 +42,13 @@ class API {
       'to': to,
     };
     var response = await http.get(Uri.http(baseUrl,
-        "/transaction/${AppData.username}/date/", queryParameters));
+        "/transaction/${AppData.userID}/date/", queryParameters));
     if (response.statusCode != 200) {
       return [null];
     }
     var jsonData = jsonDecode(response.body);
     if (jsonData == null) return [];
-    List<DatedTransaction> dtList = [];
+    List<DatedTransaction> dt = [];
     for (dynamic t in jsonData) {
       List<AppTransaction> tList = [];
       for (dynamic u in t['Transactions']) {
@@ -60,17 +60,15 @@ class API {
             note: u['Note'],
             username: u['Username']));
       }
-      dtList.add(DatedTransaction(date: t['Date'], transactions: tList));
+      dt.add(DatedTransaction(date: t['Date'], transactions: tList));
     }
 
-
-
-    return dtList;
+    return dt;
   }
 
   static Future<double> getBalance() async {
     var response =
-        await http.get(Uri.http(baseUrl, "/user/${AppData.username}"));
+        await http.get(Uri.http(baseUrl, "/user/${AppData.userID}"));
     if (response.statusCode != 200) {
       return -1;
     }
@@ -102,7 +100,7 @@ class API {
     });
 
     var response = await http.put(
-      Uri.parse('http://$baseUrl/transaction/${AppData.username}'),
+      Uri.parse('http://$baseUrl/transaction/${AppData.userID}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -138,7 +136,7 @@ class API {
     });
 
     var response = await http.post(
-      Uri.parse('http://$baseUrl/transaction/${AppData.username}'),
+      Uri.parse('http://$baseUrl/transaction/${AppData.userID}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -154,7 +152,7 @@ class API {
 
   static Future<EditDeleteStatus> deleteTransaction({required int id}) async {
     var response = await http.delete(
-      Uri.parse('http://$baseUrl/transaction/${AppData.username}/$id'),
+      Uri.parse('http://$baseUrl/transaction/${AppData.userID}/$id'),
     );
 
     if (response.statusCode == 200) {
@@ -166,7 +164,7 @@ class API {
 
   static Future<AppTransaction> getTransactionByID({required int id}) async {
     var response = await http
-        .get(Uri.http(baseUrl, "/transaction/${AppData.username}/id/$id"));
+        .get(Uri.http(baseUrl, "/transaction/${AppData.userID}/id/$id"));
     var jsonData = jsonDecode(response.body);
     return AppTransaction(
         id: id,
@@ -174,13 +172,13 @@ class API {
         amount: jsonData['Amount'],
         date: jsonData['Date'],
         note: jsonData['Note'],
-        username: AppData.username);
+        username: AppData.userID);
   }
 
   static Future<http.Response> updateUserBalance(
       {required double balance}) async {
     String requestJson = jsonEncode(<String, dynamic>{
-      'Username': AppData.username,
+      'Username': AppData.userID,
       'Balance': balance,
     });
 
