@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:moneytracker_app/pages/create_transaction.dart';
+import 'package:moneytracker_app/services/firestore.dart';
 import 'package:moneytracker_app/widgets/app_drawer.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/date_card.dart';
@@ -29,7 +30,7 @@ class HomepageState extends State<Homepage> {
     datedTransactions = await API.getTransactionsFromDateRange(
         DateFormat("yyyy-MM-dd").format(AppData.startDate),
         DateFormat("yyyy-MM-dd").format(AppData.endDate));
-    balance = await API.getBalance();
+    balance = await FireStore.getBalance();
     setState(() {
       _setListStatus();
     });

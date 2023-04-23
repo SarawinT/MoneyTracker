@@ -23,6 +23,7 @@ dependencies:
   google_sign_in: ^6.0.2
   font_awesome_flutter: ^10.4.0
   google_sign_in_web: ^0.11.0+2
+  cloud_firestore: ^4.4.5
 
 dev_dependencies:
 

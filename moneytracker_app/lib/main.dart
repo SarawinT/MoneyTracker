@@ -9,6 +9,7 @@ import 'package:moneytracker_app/appdata.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
 import 'package:moneytracker_app/pages/loading_page.dart';
 import 'package:moneytracker_app/pages/login_page.dart';
+import 'package:moneytracker_app/services/firestore.dart';
 import 'package:moneytracker_app/services/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
@@ -68,6 +69,7 @@ class _MyAppState extends State<MyApp> {
                 return LoadingPage();
               } else if (snapshot.hasData) {
                 AppData.username = FirebaseAuth.instance.currentUser!.uid;
+                FireStore.createUser();
                 return Homepage();
               } else {
                 return LogInPage();
