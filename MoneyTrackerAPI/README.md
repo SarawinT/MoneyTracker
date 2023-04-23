@@ -1,4 +1,6 @@
-# MoneyTracker Go API
+# ~~MoneyTracker Go API~~ (Deprecated)
+
+**Migrated to FireStore Database and FireBase Google Authentication.**
 
 ## Hexagonal Architecture Web API
 - [**Fiber**](https://github.com/gofiber/fiber) as Web Framework
