@@ -27,9 +27,8 @@ class HomepageState extends State<Homepage> {
   late String dateTimeText = "";
 
   Future updateData() async {
-    datedTransactions = await API.getTransactionsFromDateRange(
-        DateFormat("yyyy-MM-dd").format(AppData.startDate),
-        DateFormat("yyyy-MM-dd").format(AppData.endDate));
+    datedTransactions = await FireStore.getTransactionsFromDateRange(
+        AppData.startDate, AppData.endDate);
     balance = await FireStore.getBalance();
     setState(() {
       _setListStatus();
@@ -62,7 +61,13 @@ class HomepageState extends State<Homepage> {
 
   @override
   void initState() {
-    print("UserID : "+AppData.username);
+    // FireStore.createTransaction(
+    //     isExpense: true,
+    //     amount: 30,
+    //     category: "Others",
+    //     selectedDate: DateTime.parse("2023-04-22"),
+    //     note: "LUL");
+    FireStore.getTransactionsFromDateRange(AppData.startDate, AppData.endDate);
     dateTimeText = DateFormat("MMMM yyyy").format(AppData.startDate);
     updateData();
     super.initState();

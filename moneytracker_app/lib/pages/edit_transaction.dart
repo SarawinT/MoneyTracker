@@ -11,7 +11,7 @@ import '../models/transaction.dart';
 import '../services/api.dart';
 
 class EditTransaction extends StatefulWidget {
-  final Transaction transaction;
+  final AppTransaction transaction;
   EditTransaction({Key? key, required this.transaction}) : super(key: key);
 
   @override

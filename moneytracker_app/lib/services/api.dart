@@ -19,9 +19,9 @@ class API {
     if (jsonData == null) return [];
     List<DatedTransaction> dt = [];
     for (dynamic t in jsonData) {
-      List<Transaction> tList = [];
+      List<AppTransaction> tList = [];
       for (dynamic u in t['Transactions']) {
-        tList.add(Transaction(
+        tList.add(AppTransaction(
             id: u['ID'],
             category: u['Category'],
             amount: u['Amount'],
@@ -48,11 +48,11 @@ class API {
     }
     var jsonData = jsonDecode(response.body);
     if (jsonData == null) return [];
-    List<DatedTransaction> dt = [];
+    List<DatedTransaction> dtList = [];
     for (dynamic t in jsonData) {
-      List<Transaction> tList = [];
+      List<AppTransaction> tList = [];
       for (dynamic u in t['Transactions']) {
-        tList.add(Transaction(
+        tList.add(AppTransaction(
             id: u['ID'],
             category: u['Category'],
             amount: u['Amount'],
@@ -60,10 +60,12 @@ class API {
             note: u['Note'],
             username: u['Username']));
       }
-      dt.add(DatedTransaction(date: t['Date'], transactions: tList));
+      dtList.add(DatedTransaction(date: t['Date'], transactions: tList));
     }
 
-    return dt;
+
+
+    return dtList;
   }
 
   static Future<double> getBalance() async {
@@ -162,11 +164,11 @@ class API {
     }
   }
 
-  static Future<Transaction> getTransactionByID({required int id}) async {
+  static Future<AppTransaction> getTransactionByID({required int id}) async {
     var response = await http
         .get(Uri.http(baseUrl, "/transaction/${AppData.username}/id/$id"));
     var jsonData = jsonDecode(response.body);
-    return Transaction(
+    return AppTransaction(
         id: id,
         category: jsonData['Category'],
         amount: jsonData['Amount'],

@@ -16,7 +16,7 @@ enum EditDeleteStatus {
 class TransactionCard extends StatelessWidget {
   NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   final IconData icon;
-  final Transaction transaction;
+  final AppTransaction transaction;
 
   TransactionCard({Key? key, required this.icon, required this.transaction})
       : super(key: key);

@@ -1,4 +1,4 @@
-class Transaction {
+class AppTransaction {
   int id;
   String category;
   double amount;
@@ -6,7 +6,7 @@ class Transaction {
   String note;
   String username;
 
-  Transaction(
+  AppTransaction(
       {required this.id,
       required this.category,
       required this.amount,
@@ -14,8 +14,8 @@ class Transaction {
       required this.note,
       required this.username});
 
-  factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
+  factory AppTransaction.fromJson(Map<String, dynamic> json) {
+    return AppTransaction(
         id: json['ID'],
         category: json['Category'],
         amount: json['Amount'],

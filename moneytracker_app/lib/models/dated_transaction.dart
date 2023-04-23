@@ -3,17 +3,17 @@ import 'transaction.dart';
 class DatedTransaction {
   String date;
   double sum = 0;
-  List<Transaction> transactions;
+  List<AppTransaction> transactions;
 
   DatedTransaction({required this.date, required this.transactions}) {
-    for (Transaction t in transactions) {
+    for (AppTransaction t in transactions) {
       sum += t.amount;
     }
   }
 
   double getTotalIncome() {
     double sum = 0;
-    for (Transaction transaction in transactions) {
+    for (AppTransaction transaction in transactions) {
       if (transaction.amount > 0) {
         sum += transaction.amount;
       }
@@ -23,7 +23,7 @@ class DatedTransaction {
 
   double getTotalIncomeByCategory(String category) {
     double sum = 0;
-    for (Transaction transaction in transactions) {
+    for (AppTransaction transaction in transactions) {
       if (transaction.amount > 0 && transaction.category == category) {
         sum += transaction.amount;
       }
@@ -33,7 +33,7 @@ class DatedTransaction {
 
   double getTotalExpense() {
     double sum = 0;
-    for (Transaction transaction in transactions) {
+    for (AppTransaction transaction in transactions) {
       if (transaction.amount < 0) {
         sum += transaction.amount;
       }
@@ -43,12 +43,12 @@ class DatedTransaction {
 
   void printCheck() {
     print(date);
-    for (Transaction t in transactions) {
+    for (AppTransaction t in transactions) {
       t.printCheck();
     }
   }
 
-  void addTransaction(Transaction t) {
+  void addTransaction(AppTransaction t) {
     transactions.add(t);
   }
 

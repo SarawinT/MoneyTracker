@@ -66,7 +66,7 @@ class _ReportPageState extends State<ReportPage> {
       sumExpense += datedTransaction.getTotalExpense();
       double sumIncomeDate = 0;
       double sumExpenseDate = 0;
-      for (Transaction transaction in datedTransaction.transactions) {
+      for (AppTransaction transaction in datedTransaction.transactions) {
         if (transaction.amount > 0) {
           sumIncomeDate += transaction.amount;
           int i = CategoryList.getIncomeIndex(transaction.category);

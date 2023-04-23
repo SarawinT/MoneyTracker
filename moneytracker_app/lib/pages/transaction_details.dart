@@ -7,9 +7,10 @@ import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 import 'package:moneytracker_app/widgets/transaction_card.dart';
 import '../appdata.dart';
 import '../services/api.dart';
+import '../services/firestore.dart';
 
 class TransactionDetails extends StatefulWidget {
-  final Transaction transaction;
+  final AppTransaction transaction;
   final IconData icon;
   String _formattedDate = "";
   TransactionDetails({
@@ -43,7 +44,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   final NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
 
   void _updateTransaction() async {
-    Transaction toUpdate =
+    AppTransaction toUpdate =
         await API.getTransactionByID(id: widget.transaction.id);
     widget.transaction.category = toUpdate.category;
     widget.transaction.amount = toUpdate.amount;
@@ -127,7 +128,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                               TextButton(
                                   onPressed: () async {
                                     Object status = EditDeleteStatus.empty;
-                                    status = await API.deleteTransaction(
+                                    status = await FireStore.deleteTransaction(
                                         id: widget.transaction.id);
                                     if (status ==
                                         EditDeleteStatus.deleteSuccess) {

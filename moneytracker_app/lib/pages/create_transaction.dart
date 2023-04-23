@@ -7,6 +7,7 @@ import 'package:moneytracker_app/widgets/category_selector.dart';
 import 'package:moneytracker_app/widgets/custom_app_bar_content.dart';
 
 import '../appdata.dart';
+import '../services/firestore.dart';
 
 class CreateTransaction extends StatefulWidget {
   const CreateTransaction({Key? key}) : super(key: key);
@@ -84,7 +85,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
           });
           if (inputCheck) {
             bool success = false;
-            await API
+            await FireStore
                 .createTransaction(
                     isExpense: _isExpense,
                     amount: double.parse(_amountController.text),
