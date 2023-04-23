@@ -61,6 +61,7 @@ class HomepageState extends State<Homepage> {
 
   @override
   void initState() {
+    print("UserID : "+AppData.username);
     dateTimeText = DateFormat("MMMM yyyy").format(AppData.startDate);
     updateData();
     super.initState();

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,8 +8,18 @@ import 'package:jiffy/jiffy.dart';
 import 'package:moneytracker_app/appdata.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
 import 'package:moneytracker_app/pages/loading_page.dart';
+import 'package:moneytracker_app/pages/login_page.dart';
+import 'package:moneytracker_app/services/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: FirebaseOptions(
+          apiKey: "AIzaSyBCdQO-RdUftZgjrETFGzaFEIIzvRFcGKg",
+          appId: "1:69696671792:web:64b22dadcb8024d3529df5",
+          messagingSenderId: "69696671792",
+          projectId: "moneytracker-e78eb"));
   runApp(const MyApp());
 }
 
@@ -19,24 +31,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _loading = true;
-
-  void _loadUsername() async {
-    final String response =
-        await rootBundle.loadString('assets/config/config.json');
-    setState(() {});
-    AppData.username = jsonDecode(response)['Username'];
-    if (AppData.username.isNotEmpty) {
-      await Future.delayed(const Duration(milliseconds: 1800));
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
 
   @override
   void initState() {
-    _loadUsername();
     AppData.startDate = DateTime.now();
     if (AppData.startDate.month < 10) {
       AppData.startDate = DateTime.parse(
@@ -53,21 +50,30 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Money Tracker',
-      theme: ThemeData(
-        primarySwatch: AppData.primaryColor,
-        textTheme: GoogleFonts.kanitTextTheme(
-          Theme.of(context).textTheme,
-        ),
-      ),
-      home: Stack(
-        children: [
-          if (!_loading) const Homepage(),
-          if (_loading) const LoadingPage(),
-        ],
-      ),
+    return ChangeNotifierProvider(
+      create: (context) => GoogleSigninProvider(),
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Money Tracker',
+          theme: ThemeData(
+            primarySwatch: AppData.primaryColor,
+            textTheme: GoogleFonts.kanitTextTheme(
+              Theme.of(context).textTheme,
+            ),
+          ),
+          home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return LoadingPage();
+              } else if (snapshot.hasData) {
+                AppData.username = FirebaseAuth.instance.currentUser!.uid;
+                return Homepage();
+              } else {
+                return LogInPage();
+              }
+            },
+          )),
     );
   }
 }
