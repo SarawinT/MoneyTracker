@@ -7,6 +7,7 @@
 ## Features 
 - Create / Edit transaction choosing from categorized list of expenses and incomes. 
 - View monthly report as categorized pie chart or dated bar chart.
+- Log in by Google Account using Firebase Auth.
 
 ## To do
 - Undo action after deleted transaction
