@@ -107,208 +107,212 @@ class _CreateTransactionState extends State<CreateTransaction> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
-            Text(
-              "Create transaction",
-              style:
-                  GoogleFonts.kanit(fontSize: 28, fontWeight: FontWeight.w500),
-            ),
-            const Divider(),
-            const SizedBox(
-              height: 24,
-            ),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  _icon,
-                  size: 32,
+                Text(
+                  "Create transaction",
+                  style:
+                      GoogleFonts.kanit(fontSize: 28, fontWeight: FontWeight.w500),
                 ),
+                const Divider(),
                 const SizedBox(
-                  width: 40,
+                  height: 24,
                 ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () async {
-                      var cData = await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return const CategorySelector();
+                Row(
+                  children: [
+                    Icon(
+                      _icon,
+                      size: 32,
+                    ),
+                    const SizedBox(
+                      width: 40,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async {
+                          var cData = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const CategorySelector();
+                              });
+                          if (cData == null) {
+                            return;
+                          }
+                          setState(() {
+                            _selectedCategory = cData.name;
+                            _isExpense = cData.isExpense;
+                            _icon = cData.icon;
                           });
-                      if (cData == null) {
-                        return;
-                      }
-                      setState(() {
-                        _selectedCategory = cData.name;
-                        _isExpense = cData.isExpense;
-                        _icon = cData.icon;
-                      });
-                    },
-                    customBorder: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              width: 2.0, color: AppData.primaryColor),
+                        },
+                        customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16, bottom: 8),
-                            child: _selectedCategory == "Select category"
-                                ? Text(
-                                    _selectedCategory,
-                                    style: GoogleFonts.kanit(
-                                        fontSize: 16,
-                                        color: const Color.fromARGB(
-                                            255, 125, 125, 125)),
-                                  )
-                                : Text(
-                                    _selectedCategory,
-                                    style: GoogleFonts.kanit(fontSize: 16),
-                                  ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.attach_money,
-                  size: 32,
-                ),
-                const SizedBox(
-                  width: 40,
-                ),
-                Flexible(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom:
-                            BorderSide(width: 2.0, color: AppData.primaryColor),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: TextField(
-                        style: GoogleFonts.kanit(fontSize: 16),
-                        decoration: InputDecoration(
-                          hintText: 'Enter amount',
-                          hintStyle: GoogleFonts.kanit(fontSize: 16),
-                          border: InputBorder.none,
-                        ),
-                        controller: _amountController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'^(\d+)?\.?\d{0,2}'))
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.calendar_month,
-                  size: 32,
-                ),
-                const SizedBox(
-                  width: 40,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      _selectDate(context);
-                    },
-                    customBorder: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              width: 2.0, color: AppData.primaryColor),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16, bottom: 8),
-                            child: Text(
-                              _formattedDate,
-                              style: GoogleFonts.kanit(fontSize: 16),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                  width: 2.0, color: AppData.primaryColor),
                             ),
                           ),
-                        ],
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 16, bottom: 8),
+                                child: _selectedCategory == "Select category"
+                                    ? Text(
+                                        _selectedCategory,
+                                        style: GoogleFonts.kanit(
+                                            fontSize: 16,
+                                            color: const Color.fromARGB(
+                                                255, 125, 125, 125)),
+                                      )
+                                    : Text(
+                                        _selectedCategory,
+                                        style: GoogleFonts.kanit(fontSize: 16),
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.list,
-                  size: 32,
+                    )
+                  ],
                 ),
                 const SizedBox(
-                  width: 40,
+                  height: 24,
                 ),
-                Flexible(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom:
-                            BorderSide(width: 2.0, color: AppData.primaryColor),
-                      ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.attach_money,
+                      size: 32,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: TextField(
-                        style: GoogleFonts.kanit(fontSize: 16),
-                        decoration: InputDecoration(
-                          hintText: 'Enter note',
-                          hintStyle: GoogleFonts.kanit(fontSize: 16),
-                          border: InputBorder.none,
+                    const SizedBox(
+                      width: 40,
+                    ),
+                    Flexible(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom:
+                                BorderSide(width: 2.0, color: AppData.primaryColor),
+                          ),
                         ),
-                        controller: _noteController,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: TextField(
+                            style: GoogleFonts.kanit(fontSize: 16),
+                            decoration: InputDecoration(
+                              hintText: 'Enter amount',
+                              hintStyle: GoogleFonts.kanit(fontSize: 16),
+                              border: InputBorder.none,
+                            ),
+                            controller: _amountController,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^(\d+)?\.?\d{0,2}'))
+                            ],
+                          ),
+                        ),
                       ),
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.calendar_month,
+                      size: 32,
                     ),
+                    const SizedBox(
+                      width: 40,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          _selectDate(context);
+                        },
+                        customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                  width: 2.0, color: AppData.primaryColor),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 16, bottom: 8),
+                                child: Text(
+                                  _formattedDate,
+                                  style: GoogleFonts.kanit(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.list,
+                      size: 32,
+                    ),
+                    const SizedBox(
+                      width: 40,
+                    ),
+                    Flexible(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom:
+                                BorderSide(width: 2.0, color: AppData.primaryColor),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: TextField(
+                            style: GoogleFonts.kanit(fontSize: 16),
+                            decoration: InputDecoration(
+                              hintText: 'Enter note',
+                              hintStyle: GoogleFonts.kanit(fontSize: 16),
+                              border: InputBorder.none,
+                            ),
+                            controller: _noteController,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                Center(
+                  child: Text(
+                    _feedback,
+                    style: GoogleFonts.kanit(color: Colors.red, fontSize: 18),
                   ),
                 )
               ],
             ),
-            const SizedBox(
-              height: 24,
-            ),
-            Center(
-              child: Text(
-                _feedback,
-                style: GoogleFonts.kanit(color: Colors.red, fontSize: 18),
-              ),
-            )
           ],
         ),
       ),

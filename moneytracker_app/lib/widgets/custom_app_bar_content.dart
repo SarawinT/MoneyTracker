@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
 import 'package:moneytracker_app/widgets/info_dialog.dart';
 import '../appdata.dart';
-import '../services/api.dart';
 import '../services/firestore.dart';
 
 class CustomAppBarContent extends StatelessWidget {
@@ -47,10 +46,10 @@ class CustomAppBarContent extends StatelessWidget {
         Expanded(
           child: Text(
             "Money Tracker",
-            style: GoogleFonts.kanit(fontSize: 24),
+            style: GoogleFonts.kanit(fontSize: 20),
           ),
         ),
-        if (balance != null)
+        if (balance != null && balance != -1)
           Card(
             child: InkWell(
               onTap: () {
@@ -72,8 +71,7 @@ class CustomAppBarContent extends StatelessWidget {
                               balance =
                                   double.tryParse(_amountController.text)!;
 
-                              var response =
-                                  await FireStore.setBalance(balance!);
+                              await FireStore.setBalance(balance!);
 
                               Navigator.pop(context);
                               homepage?.updateData();

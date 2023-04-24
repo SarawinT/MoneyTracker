@@ -113,15 +113,77 @@ class HomepageState extends State<Homepage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const CircularProgressIndicator(),
-                const SizedBox(
-                  height: 16,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            AppData.startDate = Jiffy(AppData.startDate)
+                                .subtract(months: 1)
+                                .dateTime;
+                            AppData.endDate = Jiffy(Jiffy(AppData.startDate)
+                                    .add(months: 1)
+                                    .dateTime)
+                                .subtract(days: 1)
+                                .dateTime;
+                            setState(() {
+                              listStatus = TransactionListStatus.loading;
+                              dateTimeText = DateFormat("MMMM yyyy")
+                                  .format(AppData.startDate);
+                            });
+                            updateData();
+                          },
+                          icon: const Icon(Icons.chevron_left),
+                          splashRadius: 22),
+                      SizedBox(
+                        width: 156,
+                        child: Text(
+                          dateTimeText,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            AppData.startDate = Jiffy(AppData.startDate)
+                                .add(months: 1)
+                                .dateTime;
+                            AppData.endDate = Jiffy(Jiffy(AppData.startDate)
+                                    .add(months: 1)
+                                    .dateTime)
+                                .subtract(days: 1)
+                                .dateTime;
+                            setState(() {
+                              listStatus = TransactionListStatus.loading;
+                              dateTimeText = DateFormat("MMMM yyyy")
+                                  .format(AppData.startDate);
+                            });
+                            updateData();
+                          },
+                          icon: const Icon(Icons.chevron_right),
+                          splashRadius: 22),
+                    ],
+                  ),
                 ),
-                Text(
-                  "Loading...",
-                  style: GoogleFonts.kanit(
-                      fontSize: 24,
-                      color: const Color.fromARGB(255, 125, 125, 125)),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        "Loading...",
+                        style: GoogleFonts.kanit(
+                            fontSize: 24,
+                            color: const Color.fromARGB(255, 125, 125, 125)),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),
@@ -171,6 +233,7 @@ class HomepageState extends State<Homepage> {
                               .subtract(days: 1)
                               .dateTime;
                           setState(() {
+                            listStatus = TransactionListStatus.loading;
                             dateTimeText = DateFormat("MMMM yyyy")
                                 .format(AppData.startDate);
                           });
@@ -198,6 +261,7 @@ class HomepageState extends State<Homepage> {
                               .subtract(days: 1)
                               .dateTime;
                           setState(() {
+                            listStatus = TransactionListStatus.loading;
                             dateTimeText = DateFormat("MMMM yyyy")
                                 .format(AppData.startDate);
                           });

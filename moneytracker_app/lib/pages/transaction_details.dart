@@ -75,161 +75,165 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       body: Padding(
         padding:
             const EdgeInsets.only(top: 16, bottom: 16, left: 24, right: 24),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  "Transaction details",
-                  style: GoogleFonts.kanit(
-                      fontSize: 28, fontWeight: FontWeight.w500),
-                ),
-              ),
-              IconButton(
-                  onPressed: () async {
-                    var editResponse = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EditTransaction(
-                                transaction: widget.transaction,
-                              )),
-                    );
-
-                    if (editResponse == EditDeleteStatus.editSuccess) {
-                      _updateTransaction();
-                      showSnackBar('Transaction edited');
-                    }
-                  },
-                  icon: const Icon(Icons.edit),
-                  splashRadius: 18),
-              IconButton(
-                  onPressed: () async {
-                    var statusD = await showDialog(
-                        context: context,
-                        builder: (BuildContext buildContext) {
-                          return AlertDialog(
-                            title: Text(
-                              "Delete Confirmation",
-                              style: GoogleFonts.kanit(
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            content: Text(
-                              "Delete this transaction?",
-                              style: GoogleFonts.kanit(),
-                            ),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(
-                                        context, EditDeleteStatus.empty);
-                                  },
-                                  child:
-                                      Text("No", style: GoogleFonts.kanit())),
-                              TextButton(
-                                  onPressed: () async {
-                                    Object status = EditDeleteStatus.empty;
-                                    status = await FireStore.deleteTransaction(
-                                        id: widget.transaction.id);
-                                    if (status ==
-                                        EditDeleteStatus.deleteSuccess) {
-                                      Navigator.pop(context,
-                                          EditDeleteStatus.deleteSuccess);
-                                    }
-                                  },
-                                  child:
-                                      Text("Yes", style: GoogleFonts.kanit()))
-                            ],
-                          );
-                        });
-                    if (statusD == EditDeleteStatus.deleteSuccess) {
-                      Navigator.pop(context, statusD);
-                    }
-                  },
-                  icon: const Icon(Icons.delete),
-                  splashRadius: 18)
-            ],
-          ),
-          const Divider(),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                width: 8,
-              ),
-              Icon(
-                widget.icon,
-                size: 52,
-              ),
-              const SizedBox(
-                width: 24,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(
                 children: [
-                  Text(
-                    widget.transaction.category,
-                    style: GoogleFonts.kanit(fontSize: 24),
+                  Expanded(
+                    child: Text(
+                      "Transaction details",
+                      style: GoogleFonts.kanit(
+                          fontSize: 28, fontWeight: FontWeight.w500),
+                    ),
                   ),
-                  widget.transaction.amount > 0
-                      ? Text(
-                          "${AppData.currency} ${moneyFormat.format(widget.transaction.amount)}",
-                          style: GoogleFonts.kanit(
-                              fontSize: 20, color: Colors.blue),
-                        )
-                      : Text(
-                          "- ${AppData.currency} ${moneyFormat.format(widget.transaction.amount * -1)}",
-                          style: GoogleFonts.kanit(
-                              fontSize: 20, color: Colors.red),
-                        )
+                  IconButton(
+                      onPressed: () async {
+                        var editResponse = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditTransaction(
+                                    transaction: widget.transaction,
+                                  )),
+                        );
+
+                        if (editResponse == EditDeleteStatus.editSuccess) {
+                          _updateTransaction();
+                          showSnackBar('Transaction edited');
+                        }
+                      },
+                      icon: const Icon(Icons.edit),
+                      splashRadius: 18),
+                  IconButton(
+                      onPressed: () async {
+                        var statusD = await showDialog(
+                            context: context,
+                            builder: (BuildContext buildContext) {
+                              return AlertDialog(
+                                title: Text(
+                                  "Delete Confirmation",
+                                  style: GoogleFonts.kanit(
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                content: Text(
+                                  "Delete this transaction?",
+                                  style: GoogleFonts.kanit(),
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(
+                                            context, EditDeleteStatus.empty);
+                                      },
+                                      child:
+                                          Text("No", style: GoogleFonts.kanit())),
+                                  TextButton(
+                                      onPressed: () async {
+                                        Object status = EditDeleteStatus.empty;
+                                        status = await FireStore.deleteTransaction(
+                                            id: widget.transaction.id);
+                                        if (status ==
+                                            EditDeleteStatus.deleteSuccess) {
+                                          Navigator.pop(context,
+                                              EditDeleteStatus.deleteSuccess);
+                                        }
+                                      },
+                                      child:
+                                          Text("Yes", style: GoogleFonts.kanit()))
+                                ],
+                              );
+                            });
+                        if (statusD == EditDeleteStatus.deleteSuccess) {
+                          Navigator.pop(context, statusD);
+                        }
+                      },
+                      icon: const Icon(Icons.delete),
+                      splashRadius: 18)
                 ],
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              const Icon(
-                Icons.calendar_month,
-                size: 32,
+              ),
+              const Divider(),
+              const SizedBox(
+                height: 16,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Icon(
+                    widget.icon,
+                    size: 52,
+                  ),
+                  const SizedBox(
+                    width: 24,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.transaction.category,
+                        style: GoogleFonts.kanit(fontSize: 24),
+                      ),
+                      widget.transaction.amount > 0
+                          ? Text(
+                              "${AppData.currency} ${moneyFormat.format(widget.transaction.amount)}",
+                              style: GoogleFonts.kanit(
+                                  fontSize: 20, color: Colors.blue),
+                            )
+                          : Text(
+                              "- ${AppData.currency} ${moneyFormat.format(widget.transaction.amount * -1)}",
+                              style: GoogleFonts.kanit(
+                                  fontSize: 20, color: Colors.red),
+                            )
+                    ],
+                  )
+                ],
               ),
               const SizedBox(
-                width: 24,
+                height: 16,
               ),
-              Text(
-                widget._formattedDate,
-                style: GoogleFonts.kanit(fontSize: 16),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          if (widget.transaction.note.isNotEmpty)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(
-                  Icons.list,
-                  size: 32,
-                ),
-                const SizedBox(
-                  width: 24,
-                ),
-                Flexible(
-                  child: Text(
-                    widget.transaction.note,
-                    style: GoogleFonts.kanit(fontSize: 16),
-                    softWrap: true,
+              Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_month,
+                    size: 32,
                   ),
+                  const SizedBox(
+                    width: 24,
+                  ),
+                  Text(
+                    widget._formattedDate,
+                    style: GoogleFonts.kanit(fontSize: 16),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              if (widget.transaction.note.isNotEmpty)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.list,
+                      size: 32,
+                    ),
+                    const SizedBox(
+                      width: 24,
+                    ),
+                    Flexible(
+                      child: Text(
+                        widget.transaction.note,
+                        style: GoogleFonts.kanit(fontSize: 16),
+                        softWrap: true,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-        ]),
+            ]),
+          ],
+        ),
       ),
     );
   }

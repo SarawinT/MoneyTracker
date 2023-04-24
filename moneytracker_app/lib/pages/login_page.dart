@@ -16,7 +16,7 @@ class LogInPage extends StatefulWidget {
 class _LogInPageState extends State<LogInPage> {
   @override
   Widget build(BuildContext context) {
-    double buttonPadding = MediaQuery.of(context).size.width * 0.15;
+    double buttonPadding = MediaQuery.of(context).size.width * 0.10;
     return SizedBox.expand(
       child: Container(
         color: AppData.primaryColor,
@@ -38,34 +38,89 @@ class _LogInPageState extends State<LogInPage> {
           ),
           Padding(
             padding: EdgeInsets.only(left: buttonPadding, right: buttonPadding),
-            child: ElevatedButton(
-                onPressed: () {
-                  final provider = Provider.of<GoogleSigninProvider>(context, listen: false);
-                  provider.googleLogin();
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white, // Background color
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: Colors.white),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Start using this app by: ",
+                          style: GoogleFonts.kanit(
+                              color: Color(0xFF494949),
+                              decoration: TextDecoration.none,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              final provider =
+                                  Provider.of<GoogleSigninProvider>(context,
+                                      listen: false);
+                              provider.googleLogin();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.blue, // Background color
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FaIcon(
+                                    FontAwesomeIcons.google,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 16,
+                                  ),
+                                  Text(
+                                    "Sign in with Google",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  )
+                                ],
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
                 ),
-                child: Padding(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      FaIcon(
-                        FontAwesomeIcons.google,
-                        color: Colors.red,
+                      TextButton(
+                        onPressed: () {
+                          // Link to GitHub issue report
+                        },
+                        child: Text(
+                          "Having problems?",
+                          style: GoogleFonts.kanit(
+                              color: Colors.white,
+                              decoration: TextDecoration.underline,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
-                      SizedBox(
-                        width: 16,
-                      ),
-                      Text(
-                        "Sign in with Google",
-                        style: TextStyle(color: Colors.black, fontSize: 16),
-                      )
                     ],
                   ),
-                )),
-          )
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 48,
+          ),
         ]),
       ),
     );

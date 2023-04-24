@@ -60,8 +60,7 @@ class _ReportPageState extends State<ReportPage> {
     sumIncome = 0;
     sumExpense = 0;
     datedTransactions = await FireStore.getTransactionsFromDateRange(
-        AppData.startDate,
-        AppData.endDate);
+        AppData.startDate, AppData.endDate);
     for (DatedTransaction datedTransaction in datedTransactions) {
       sumIncome += datedTransaction.getTotalIncome();
       sumExpense += datedTransaction.getTotalExpense();
@@ -71,12 +70,10 @@ class _ReportPageState extends State<ReportPage> {
         if (transaction.amount > 0) {
           sumIncomeDate += transaction.amount;
           int i = CategoryList.getIncomeIndex(transaction.category);
-          print(i);
           cIncomeAmountChart[i].addAmount(transaction.amount);
         } else {
           sumExpenseDate += transaction.amount;
           int i = CategoryList.getExpenseIndex(transaction.category);
-          print(i);
           cExpenseAmountChart[i].addAmount(transaction.amount);
         }
       }
@@ -189,11 +186,13 @@ class _ReportPageState extends State<ReportPage> {
                     "Report from ",
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
                   ),
-                  Text(
-                    "${DateFormat("dd MMM yyyy").format(AppData.startDate)} "
-                    "- ${DateFormat("dd MMM yyyy").format(AppData.endDate)}",
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w600),
+                  Flexible(
+                    child: Text(
+                      "${DateFormat("dd MMM yyyy").format(AppData.startDate)} "
+                      "- ${DateFormat("dd MMM yyyy").format(AppData.endDate)}",
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ],
               ),
