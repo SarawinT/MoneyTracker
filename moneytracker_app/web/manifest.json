@@ -1,11 +1,11 @@
 {
-    "name": "moneytracker_app",
-    "short_name": "moneytracker_app",
+    "name": "Money Tracker",
+    "short_name": "MT",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#4caf50",
+    "theme_color": "#4caf50",
+    "description": "An app you can use to keep track of your money",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

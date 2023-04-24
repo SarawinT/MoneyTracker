@@ -96,7 +96,7 @@ class FireStore {
 
       String tDate = DateFormat('yyyy-MM-dd').format(t.data()['Date'].toDate());
       if (tDate == cDate) {
-        dtList.last.transactions.add(transaction);
+        dtList.last.addTransaction(transaction);
       } else {
         cDate = tDate;
         List<AppTransaction> tList = [];
