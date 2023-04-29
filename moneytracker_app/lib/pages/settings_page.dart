@@ -21,7 +21,9 @@ class SettingsPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          SizedBox(height: 16,),
+          SizedBox(
+            height: 16,
+          ),
           SettingTapButton(
               icon: Icons.exit_to_app,
               title: "Sign out",
@@ -41,12 +43,12 @@ class SettingsPage extends StatelessWidget {
                         actions: [
                           TextButton(
                               onPressed: () {
-                                Navigator.pop(context);
+                                Navigator.pop(buildContext);
                               },
                               child: Text("No", style: GoogleFonts.kanit())),
                           TextButton(
                               onPressed: () {
-                                Navigator.pop(context);
+                                Navigator.pop(buildContext);
                                 FirebaseAuth.instance.signOut().then((value) {
                                   AppData.resetUserData();
                                   Navigator.pushReplacement(
