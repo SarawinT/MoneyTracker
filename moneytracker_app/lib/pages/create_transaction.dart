@@ -82,10 +82,14 @@ class _CreateTransactionState extends State<CreateTransaction> {
               inputCheck = true;
             }
           });
+          _selectedDate = new DateTime(
+            _selectedDate.year,
+            _selectedDate.month,
+            _selectedDate.day,
+          );
           if (inputCheck) {
             bool success = false;
-            await FireStore
-                .createTransaction(
+            await FireStore.createTransaction(
                     isExpense: _isExpense,
                     amount: double.parse(_amountController.text),
                     category: _selectedCategory,
@@ -114,8 +118,8 @@ class _CreateTransactionState extends State<CreateTransaction> {
               children: [
                 Text(
                   "Create transaction",
-                  style:
-                      GoogleFonts.kanit(fontSize: 28, fontWeight: FontWeight.w500),
+                  style: GoogleFonts.kanit(
+                      fontSize: 28, fontWeight: FontWeight.w500),
                 ),
                 const Divider(),
                 const SizedBox(
@@ -160,7 +164,8 @@ class _CreateTransactionState extends State<CreateTransaction> {
                           child: Row(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 16, bottom: 8),
+                                padding:
+                                    const EdgeInsets.only(left: 16, bottom: 8),
                                 child: _selectedCategory == "Select category"
                                     ? Text(
                                         _selectedCategory,
@@ -197,8 +202,8 @@ class _CreateTransactionState extends State<CreateTransaction> {
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border(
-                            bottom:
-                                BorderSide(width: 2.0, color: AppData.primaryColor),
+                            bottom: BorderSide(
+                                width: 2.0, color: AppData.primaryColor),
                           ),
                         ),
                         child: Padding(
@@ -253,7 +258,8 @@ class _CreateTransactionState extends State<CreateTransaction> {
                           child: Row(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 16, bottom: 8),
+                                padding:
+                                    const EdgeInsets.only(left: 16, bottom: 8),
                                 child: Text(
                                   _formattedDate,
                                   style: GoogleFonts.kanit(fontSize: 16),
@@ -282,8 +288,8 @@ class _CreateTransactionState extends State<CreateTransaction> {
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border(
-                            bottom:
-                                BorderSide(width: 2.0, color: AppData.primaryColor),
+                            bottom: BorderSide(
+                                width: 2.0, color: AppData.primaryColor),
                           ),
                         ),
                         child: Padding(
