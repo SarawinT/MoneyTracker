@@ -17,6 +17,12 @@ class _DateChartState extends State<DateChart> {
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
+      zoomPanBehavior: ZoomPanBehavior(
+          enablePinching: true,
+          enableDoubleTapZooming: true,
+          enableMouseWheelZooming: true,
+          enablePanning: true,
+          maximumZoomLevel: 0.3),
       enableSideBySideSeriesPlacement: false,
       primaryXAxis: CategoryAxis(labelStyle: GoogleFonts.kanit()),
       primaryYAxis: NumericAxis(labelStyle: GoogleFonts.kanit()),
