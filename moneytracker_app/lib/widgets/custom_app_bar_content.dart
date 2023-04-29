@@ -9,8 +9,10 @@ import '../services/firestore.dart';
 class CustomAppBarContent extends StatelessWidget {
   late double? balance;
   final TextEditingController _amountController = TextEditingController();
+  final String title;
 
-  CustomAppBarContent({Key? key, this.balance}) : super(key: key);
+  CustomAppBarContent({Key? key, this.balance, this.title = "Money Tracker"})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class CustomAppBarContent extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            "Money Tracker",
+            title,
             style: GoogleFonts.kanit(fontSize: 20),
           ),
         ),

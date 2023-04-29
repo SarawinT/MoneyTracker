@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moneytracker_app/pages/homepage.dart';
 import 'package:moneytracker_app/pages/report_page.dart';
+import 'package:moneytracker_app/pages/settings_page.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../appdata.dart';
@@ -14,7 +15,7 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: Padding(
         padding: const EdgeInsets.only(top: 24, bottom: 16),
-        child: Column(
+        child: ListView(
           children: [
             const DrawerProfile(),
             const SizedBox(
@@ -57,6 +58,22 @@ class AppDrawer extends StatelessWidget {
                           type: PageTransitionType.fade,
                           duration: const Duration(milliseconds: 100)));
                 }),
+            DrawerRow(
+                iconData: Icons.settings,
+                text: "Settings",
+                onTap: () {
+                  if (pageIndex == 2) {
+                    Navigator.pop(context);
+                    return;
+                  }
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                          child: const SettingsPage(),
+                          type: PageTransitionType.fade,
+                          duration: const Duration(milliseconds: 100)));
+                })
             // DrawerRow(iconData: Icons.settings, text: "Settings", onTap: () {})
           ],
         ),

@@ -60,12 +60,6 @@ class HomepageState extends State<Homepage> {
 
   @override
   void initState() {
-    // FireStore.createTransaction(
-    //     isExpense: true,
-    //     amount: 30,
-    //     category: "Others",
-    //     selectedDate: DateTime.parse("2023-04-22"),
-    //     note: "LUL");
     dateTimeText = DateFormat("MMMM yyyy").format(AppData.startDate);
     updateData();
     super.initState();
@@ -313,7 +307,7 @@ class HomepageState extends State<Homepage> {
                   child: Column(
                     children: [
                       const SizedBox(
-                        height: 196,
+                        height: 172,
                       ),
                       const Icon(
                         Icons.add_box_outlined,

@@ -11,4 +11,10 @@ class AppData {
   static NumberFormat moneyFormat = NumberFormat.decimalPattern('en_us');
   static String currency = "฿";
 
+
+  static void resetUserData() {
+    userID = "";
+    userDisplayName = "";
+  }
+
 }
